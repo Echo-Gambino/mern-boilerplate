@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+const test = require('./routes/api/test.api');
+
 const {
     URI_DATABASE
 } = require('./constants');
@@ -39,7 +41,8 @@ connection.once('open', function() {
 // Passport middleware
 app.use(passport.initialize());
 
-
+// Set up routes for testing purposes
+app.use('/test', test);
 
 app.listen(PORT, function() {
     console.log(`Server is running on Port: ${PORT}`);
