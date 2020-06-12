@@ -7,7 +7,28 @@ const validateRegData = require("../../util/users/register.validate");
 // User model
 const User = require("../../models/user.model");
 
+// @route GET api/users/
+// @desc Get a list of user items
+// @access PUBLIC
+router.get("/", (req, res) => {
+    User.find(function(err, users) {
+        if (err) {
+            console.log(err);
+        } else {
+            let userItems = [];
+            
+            for (let i = 0; i < users.length; i++) {
+                userItems.push(users[i]);
+            }
+
+            res.json(userItems);
+        }
+    });
+});
+
 // @route POST <api>/create
+// @desc Create a user item and saves it in the server's database
+// @access PUBLIC
 router.post("/create", (req, res) => {
     // Form validation
     const { errors, isValid } = validateRegData(req.body);
