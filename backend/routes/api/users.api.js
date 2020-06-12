@@ -7,7 +7,7 @@ const validateRegData = require("../../util/users/register.validate");
 // User model
 const User = require("../../models/user.model");
 
-// @route GET api/users/
+// @route GET <api>/
 // @desc Get a list of user items
 // @access PUBLIC
 router.get("/", (req, res) => {
@@ -68,6 +68,24 @@ router.post("/create", (req, res) => {
         }
     })
 
+});
+
+// @route POST <api>/remove/:id
+// @desc Remove a user item from ther server's database by id
+// @access PRIVATE (Temporarily PUBLIC)
+router.post("/remove/:id", (req, res) => {
+    User.findByIdAndRemove(req.params.id, function(err, user) {
+        if (user) {
+            // If user is NOT null, that means that the user object is removed.
+            res.status(200).send('Removal successful');
+        } else if (err) {
+            // If err is NOT null, that means that something has gone wrong, so report it.
+            res.status(err.status).send(err);
+        } else {
+            // If NEITHER user nor err is valid, then we assume that the user object is not found.
+            res.status(404).send('User not found');
+        }
+    });
 });
 
 module.exports = router;
