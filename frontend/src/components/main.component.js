@@ -23,12 +23,13 @@ class Main extends Component {
             >
                 Login
             </button>
-            <button 
-                className="btn btn-primary" 
+            <Link 
+                to="/register" 
+                className="btn btn-primary"
                 style={{marginRight: "1em", marginLeft: "1em"}}
             >
                 Register
-            </button>
+            </Link>
         </div>
         );
     }
