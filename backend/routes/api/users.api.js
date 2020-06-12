@@ -26,6 +26,24 @@ router.get("/", (req, res) => {
     });
 });
 
+// @route GET <api>/:id
+// @desc Get the profile of the user
+// @access PRIVATE (Temporarily PUBLIC)
+router.get("/:id", (req, res) => {
+    User.findById(req.params.id, function(err, user) {
+        if (!user) {
+            // HTTP status 404 means "NOT FOUND" error
+            res.status(404).send("Data is not found");
+            if (err) {
+                console.log(err);
+            }
+        } else {
+            const userItem = user;
+            res.json(userItem);
+        }
+    });
+});
+
 // @route POST <api>/create
 // @desc Create a user item and saves it in the server's database
 // @access PUBLIC
