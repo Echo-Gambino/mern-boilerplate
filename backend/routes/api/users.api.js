@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 const validateRegData = require("../../util/users/register.validate");
+const cleanUserData = require("../../util/users/userData.clean");
 
 // User model
 const User = require("../../models/user.model");
@@ -18,7 +19,7 @@ router.get("/", (req, res) => {
             let userItems = [];
             
             for (let i = 0; i < users.length; i++) {
-                userItems.push(users[i]);
+                userItems.push(cleanUserData(users[i]));
             }
 
             res.json(userItems);
@@ -38,8 +39,7 @@ router.get("/:id", (req, res) => {
                 console.log(err);
             }
         } else {
-            const userItem = user;
-            res.json(userItem);
+            res.json(cleanUserData(user));
         }
     });
 });
