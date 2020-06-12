@@ -1,5 +1,14 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import classnames from "classnames";
+
+import { registerUser } from "../actions/auth.action";
+
+import {
+    MAIN_PAGE_ENDPOINT
+} from "../constants";
 
 class RegisterForm extends Component {
 
@@ -8,6 +17,7 @@ class RegisterForm extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
         this.state = {
             name: "",
@@ -16,6 +26,19 @@ class RegisterForm extends Component {
             password2: "",
             errors: {}
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // Update the state's error list if the next prop object is valid
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
+    }
+
+    onSubmitSuccess(args) {
+        this.props.history.push(MAIN_PAGE_ENDPOINT);
     }
 
     onChange(e) {
@@ -32,15 +55,11 @@ class RegisterForm extends Component {
             password2: this.state.password2
         };
 
-        console.log("Submitting:");
-        console.log(newUser);
-
-        /*
+        // onSubmitSuccess is the callback function if registerUser is successful.
         this.props.registerUser(
             newUser,
-            this.props.history
+            this.onSubmitSuccess
         );
-        */
     }
 
     render() {
@@ -133,4 +152,18 @@ class RegisterForm extends Component {
 
 }
 
-export default RegisterForm;
+RegisterForm.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    errors: state.errors
+});
+
+const routeRegisterForm = withRouter(RegisterForm);
+
+export default connect(
+    mapStateToProps,
+    { registerUser }
+)(routeRegisterForm);

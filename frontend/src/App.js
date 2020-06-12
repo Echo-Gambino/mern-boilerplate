@@ -5,6 +5,8 @@ import './App.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import store from "./store";
+
 import Main from "./components/main.component";
 import Register from "./components/register.component";
 
@@ -17,14 +19,18 @@ import {
 class App extends Component {
   render() {
     return (
-    <Router>
-      <div className="App">
-        <div className="container">
-          <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
-          <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
+    <Provider store={store}>
+      <Router>
+        <div className="App">
+          <div className="container">
+            <Switch>
+              <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
+              <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </Provider>
     );
   }
 }
