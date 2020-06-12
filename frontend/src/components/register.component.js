@@ -5,10 +5,6 @@ import RegisterForm from "./register.form";
 
 class Register extends Component {
     
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
         <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
@@ -26,6 +22,7 @@ class Register extends Component {
         </div>
         );
     }
+    
 }
 
 export default Register;
