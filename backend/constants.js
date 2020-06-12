@@ -1,4 +1,4 @@
-const keys = require('./keys.secret');
+const keys = require('./keys.secrets');
 
 const URI_DATABASE = keys.mongoURI + keys.databaseName;
 const SECRET_KEY = keys.secretOrKey;

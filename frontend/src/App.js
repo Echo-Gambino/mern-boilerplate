@@ -5,18 +5,32 @@ import './App.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import store from "./store";
+
 import Main from "./components/main.component";
+import Register from "./components/register.component";
+
+import {
+  MAIN_PAGE_ENDPOINT,
+  REGISTER_PAGE_ENDPOINT,
+  LOGIN_PAGE_ENDPOINT,
+} from "./constants";
 
 class App extends Component {
   render() {
     return (
-    <Router>
-      <div className="App">
-        <div className="container">
-          <Route exact path="/" component={Main} />
+    <Provider store={store}>
+      <Router>
+        <div className="App">
+          <div className="container">
+            <Switch>
+              <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
+              <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
+            </Switch>
+          </div>
         </div>
-      </div>
-    </Router>
+      </Router>
+    </Provider>
     );
   }
 }

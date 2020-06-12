@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const test = require('./routes/api/test.api');
+const users = require('./routes/api/users.api');
 
 const {
     URI_DATABASE
@@ -43,6 +44,7 @@ app.use(passport.initialize());
 
 // Set up routes for testing purposes
 app.use('/test', test);
+app.use('/users', users);
 
 app.listen(PORT, function() {
     console.log(`Server is running on Port: ${PORT}`);

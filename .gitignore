@@ -107,7 +107,8 @@ dist
 */db/*
 
 # secrets
-*.secrets.js
+*.secret.*
+*.secrets.*
 
 # swp files
 *.swp

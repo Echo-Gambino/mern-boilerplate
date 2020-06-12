@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+import {
+    REGISTER_PAGE_ENDPOINT,
+    LOGIN_PAGE_ENDPOINT
+} from "../constants";
+
 class Main extends Component {
 
     constructor(props) {
@@ -23,12 +28,13 @@ class Main extends Component {
             >
                 Login
             </button>
-            <button 
-                className="btn btn-primary" 
+            <Link 
+                to={REGISTER_PAGE_ENDPOINT}
+                className="btn btn-primary"
                 style={{marginRight: "1em", marginLeft: "1em"}}
             >
                 Register
-            </button>
+            </Link>
         </div>
         );
     }
