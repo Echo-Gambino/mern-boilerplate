@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+const passportJwt = require("./config/passport");
+
 const test = require('./routes/api/test.api');
 const users = require('./routes/api/users.api');
 
@@ -41,6 +43,9 @@ connection.once('open', function() {
 
 // Passport middleware
 app.use(passport.initialize());
+
+// Passport config
+passportJwt(passport);
 
 // Set up routes for testing purposes
 app.use('/test', test);
