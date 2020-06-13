@@ -9,6 +9,7 @@ import store from "./store";
 
 import Main from "./components/main.component";
 import Register from "./components/register.component";
+import Login from "./components/login.component";
 
 import {
   MAIN_PAGE_ENDPOINT,
@@ -26,6 +27,7 @@ class App extends Component {
             <Switch>
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
               <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
+              <Route exact path={LOGIN_PAGE_ENDPOINT} component={Login} />
             </Switch>
           </div>
         </div>

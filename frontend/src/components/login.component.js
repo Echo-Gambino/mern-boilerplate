@@ -1,32 +1,31 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import RegisterForm from "./register.form";
+import LoginForm from "./login.form";
 
 import {
-    LOGIN_PAGE_ENDPOINT
+    REGISTER_PAGE_ENDPOINT
 } from "../constants";
 
-class Register extends Component {
-    
+class Login extends Component {
+
     render() {
         return (
         <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
 
             <div style={{marginBottom: "2em"}}>
                 <h2 className="font-weight-bold">BOILERPLATE</h2>
-                <h4>Welcome to the party!</h4>
+                <h4>Log in to get the full experience!</h4>
             </div>
 
             <div className="col-6 mx-auto border" style={{padding: "1em"}}>
-                <RegisterForm />
-                <span>Already have an account? <Link to={LOGIN_PAGE_ENDPOINT}>Log in</Link></span>
+                <LoginForm />
+                <span>New to Boilerplate? <Link to={REGISTER_PAGE_ENDPOINT}>Register now</Link></span>
             </div>
 
         </div>
         );
     }
-    
 }
 
-export default Register;
+export default Login;

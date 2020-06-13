@@ -22,12 +22,13 @@ class Main extends Component {
             style={{ marginTop: "2em", marginBottom: "2em", padding: "1em"}}
         >
             <h4>Hello Anonymous user!</h4>
-            <button 
-                className="btn btn-primary" 
+            <Link 
+                to={LOGIN_PAGE_ENDPOINT}
+                className="btn btn-primary"
                 style={{marginRight: "1em", marginLeft: "1em"}}
             >
-                Login
-            </button>
+                Log In
+            </Link>
             <Link 
                 to={REGISTER_PAGE_ENDPOINT}
                 className="btn btn-primary"

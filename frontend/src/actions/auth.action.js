@@ -17,3 +17,22 @@ export const registerUser = (userData, callback) => dispatch => {
             });
         });
 };
+
+export const loginUser = (userData) => dispatch => {
+    // Login User
+    console.log("[auth.action] loginUser:");
+    console.log(userData);
+
+    /*
+    axios.post("/users/login", userData)
+        .then(res => {
+            // Success
+        })
+        .catch(err => {
+            dispatch({
+                GET_ERRORS,
+                payload: err.response.data
+            })
+        });
+    */
+};
