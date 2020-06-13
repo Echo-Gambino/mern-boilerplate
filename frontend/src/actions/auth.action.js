@@ -8,9 +8,14 @@ import {
     USER_LOADING
 } from "./types.action";
 
+import {
+    API_LOGIN_ENDPOINT,
+    API_REGISTER_ENDPOINT
+} from "../constants";
+
 // Register
 export const registerUser = (userData, callback) => dispatch => {
-    axios.post("/users/create", userData)
+    axios.post(API_REGISTER_ENDPOINT, userData)
         .then(res => {
             callback();
         })
@@ -24,11 +29,7 @@ export const registerUser = (userData, callback) => dispatch => {
 
 // Login (Get user token)
 export const loginUser = (userData) => dispatch => {
-    // Login User
-    console.log("[auth.action] loginUser:");
-    console.log(userData);
-
-    axios.post("/users/login", userData)
+    axios.post(API_LOGIN_ENDPOINT, userData)
         .then(res => {
             // Save response data to localStorage
 
