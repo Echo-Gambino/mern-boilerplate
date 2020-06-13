@@ -84,7 +84,7 @@ class LoginForm extends Component {
                     id="password"
                     type="password"
                 />
-                <p className="text-danger">{ errors.password }</p>
+                <p className="text-danger">{ errors.password }{ errors.general }</p>
             </div>
 
             <div className="form-group">
