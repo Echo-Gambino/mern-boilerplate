@@ -43,8 +43,7 @@ export const loginUser = (userData, callback) => dispatch => {
             // Set current user
             dispatch(setCurrentUser(decoded));
 
-            console.log("[axios] login successful!");
-
+            // Call the callback function
             callback();
         })
         .catch(err => {
