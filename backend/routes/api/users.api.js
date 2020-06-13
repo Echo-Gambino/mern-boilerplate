@@ -1,12 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const validateRegData = require("../../util/users/register.validate");
+const validateLgnData = require("../../util/users/login.validate");
 const cleanUserData = require("../../util/users/userData.clean");
 
 // User model
 const User = require("../../models/user.model");
+
+const {
+    SECRET_KEY
+} = require("../../constants");
 
 // @route GET <api>/
 // @desc Get a list of user items
@@ -85,6 +91,62 @@ router.post("/create", (req, res) => {
             });
         }
     })
+
+});
+
+// @route POST <api>/login
+// @desc Login user and return JWT token
+// @access PUBLIC
+router.post("/login", (req, res) => {
+    // Form validation
+    const { errors, isValid } = validateLgnData(req.body);
+
+    // Check validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const invalidCredentialsMsg = "Invalid Credentials. Please try again.";
+
+    User.findOne({ email })
+        .then(user => {
+            // Check if user exists
+            if (!user) {
+                return res.status(404).json({ ...errors, general: invalidCredentialsMsg });
+            }
+
+            // Check password
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if (isMatch) {
+                        // User matched
+                        // Create JWT Payload
+                        const payload = {
+                            id: user.id,
+                            name: user.name
+                        };
+
+                        jwt.sign(
+                            payload,
+                            SECRET_KEY,
+                            {
+                                expiresIn: 86400 // 1 day in seconds
+                            },
+                            (err, token) => {
+                                res.json({
+                                    success: true,
+                                    token: "Bearer " + token
+                                });
+                            }
+                        );
+                    } else {
+                        return res.status(400).json({ ...errors, general: invalidCredentialsMsg });
+                    }
+                })
+        });
 
 });
 
