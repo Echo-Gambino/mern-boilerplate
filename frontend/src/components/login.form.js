@@ -6,6 +6,10 @@ import classnames from "classnames";
 
 import { loginUser } from "../actions/auth.action";
 
+import {
+    MAIN_PAGE_ENDPOINT
+} from "../constants";
+
 class LoginForm extends Component {
 
     constructor(props) {
@@ -13,6 +17,7 @@ class LoginForm extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
         this.state = {
             email: "",
@@ -29,6 +34,10 @@ class LoginForm extends Component {
         }
     }
 
+    onSubmitSuccess(args) {
+        this.props.history.push(MAIN_PAGE_ENDPOINT);
+    }
+
     onChange(e) {
         this.setState({ [e.target.id]: e.target.value });
     }
@@ -41,11 +50,9 @@ class LoginForm extends Component {
             password: this.state.password
         };
 
-        // console.log("Submit:");
-        // console.log(userData);
-
         this.props.loginUser(
-            userData
+            userData,
+            this.onSubmitSuccess
         );
     }
 
@@ -102,10 +109,12 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
     loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+    auth: state.auth,
     errors: state.errors
 });
 

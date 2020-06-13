@@ -1,5 +1,5 @@
 import axios from "axios";
-import setToken from "../util/auth/setToken.auth.util";
+import authSetToken from "../util/auth/setToken.auth.util";
 import jwt_decode from "jwt-decode";
 
 import {
@@ -28,7 +28,7 @@ export const registerUser = (userData, callback) => dispatch => {
 };
 
 // Login (Get user token)
-export const loginUser = (userData) => dispatch => {
+export const loginUser = (userData, callback) => dispatch => {
     axios.post(API_LOGIN_ENDPOINT, userData)
         .then(res => {
             // Save response data to localStorage
@@ -37,13 +37,15 @@ export const loginUser = (userData) => dispatch => {
             const { token } = res.data;
             localStorage.setItem("jwtToken", token);
             // Set token to Auth header
-            setToken(token);
+            authSetToken(token);
             // Decode token to get user data
             const decoded = jwt_decode(token);
             // Set current user
             dispatch(setCurrentUser(decoded));
 
             console.log("[axios] login successful!");
+
+            callback();
         })
         .catch(err => {
             dispatch({
@@ -66,7 +68,7 @@ export const logoutUser = () => dispatch => {
     // Remove token from local storage
     localStorage.removeItem("jwtToken");
     // Remove auth header for future requests
-    setToken(false);
+    authSetToken(false);
     // Set current user to empty object {} which will set isAuthenticated to false
     dispatch(setCurrentUser({}));
 };
