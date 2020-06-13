@@ -6,18 +6,17 @@ import classnames from "classnames";
 
 import { loginUser } from "../actions/auth.action";
 
-import {
-    MAIN_PAGE_ENDPOINT
-} from "../constants";
-
 class LoginForm extends Component {
 
     constructor(props) {
         super(props);
 
+        // Set the callback function (this.onSuccess) 
+        // if the prop's function is valid, otherwise, replace it with a dummy function.
+        this.onSuccess = this.props.onSuccess ?? (() => false);
+
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
         this.state = {
             email: "",
@@ -34,10 +33,6 @@ class LoginForm extends Component {
         }
     }
 
-    onSubmitSuccess(args) {
-        this.props.history.push(MAIN_PAGE_ENDPOINT);
-    }
-
     onChange(e) {
         this.setState({ [e.target.id]: e.target.value });
     }
@@ -50,9 +45,11 @@ class LoginForm extends Component {
             password: this.state.password
         };
 
+        // this.onSuccess is the callback function that the parent component specified
+        // to respond to once this component succeeded at its purpose (logging in the user).
         this.props.loginUser(
             userData,
-            this.onSubmitSuccess
+            this.onSuccess 
         );
     }
 

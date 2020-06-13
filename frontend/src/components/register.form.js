@@ -6,18 +6,17 @@ import classnames from "classnames";
 
 import { registerUser } from "../actions/auth.action";
 
-import {
-    LOGIN_PAGE_ENDPOINT
-} from "../constants";
-
 class RegisterForm extends Component {
 
     constructor(props) {
         super(props);
 
+        // Set the callback function (this.onSuccess)
+        // if the prop's function is valid, otherwise, replace it with a dummy function.
+        this.onSuccess = this.props.onSuccess ?? (() => false);
+
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.onSubmitSuccess = this.onSubmitSuccess.bind(this);
 
         this.state = {
             name: "",
@@ -37,10 +36,6 @@ class RegisterForm extends Component {
         }
     }
 
-    onSubmitSuccess(args) {
-        this.props.history.push(LOGIN_PAGE_ENDPOINT);
-    }
-
     onChange(e) {
         this.setState({ [e.target.id]: e.target.value });
     }
@@ -58,7 +53,7 @@ class RegisterForm extends Component {
         // onSubmitSuccess is the callback function if registerUser is successful.
         this.props.registerUser(
             newUser,
-            this.onSubmitSuccess
+            this.onSuccess
         );
     }
 

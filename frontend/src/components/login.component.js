@@ -1,13 +1,24 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import LoginForm from "./login.form";
 
 import {
+    MAIN_PAGE_ENDPOINT,
     REGISTER_PAGE_ENDPOINT
 } from "../constants";
 
 class Login extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.onLoginSuccess = this.onLoginSuccess.bind(this);
+    }
+
+    onLoginSuccess() {
+        this.props.history.push(MAIN_PAGE_ENDPOINT);
+    }
 
     render() {
         return (
@@ -19,7 +30,7 @@ class Login extends Component {
             </div>
 
             <div className="col-6 mx-auto border" style={{padding: "1em"}}>
-                <LoginForm />
+                <LoginForm onSuccess={this.onLoginSuccess} />
                 <span>New to Boilerplate? <Link to={REGISTER_PAGE_ENDPOINT}>Register now</Link></span>
             </div>
 
@@ -28,4 +39,6 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const routerLogin = withRouter(Login);
+
+export default routerLogin;
