@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const validateAuthToken = require("../../util/users/authToken.validate");
 const validateRegData = require("../../util/users/register.validate");
 const validateLgnData = require("../../util/users/login.validate");
 const cleanUserData = require("../../util/users/userData.clean");
@@ -37,6 +38,14 @@ router.get("/", (req, res) => {
 // @desc Get the profile of the user
 // @access PRIVATE (Temporarily PUBLIC)
 router.get("/:id", (req, res) => {
+    const jwtToken = validateAuthToken(req.headers.authorization);
+    const tokenId = jwtToken && jwtToken.id;
+
+    if (tokenId !== req.params.id) {
+        res.status(400).send("Unauthorized request");
+        return;
+    }
+
     User.findById(req.params.id, function(err, user) {
         if (!user) {
             // HTTP status 404 means "NOT FOUND" error
@@ -154,6 +163,14 @@ router.post("/login", (req, res) => {
 // @desc Remove a user item from ther server's database by id
 // @access PRIVATE (Temporarily PUBLIC)
 router.post("/remove/:id", (req, res) => {
+    const jwtToken = validateAuthToken(req.headers.authorization);
+    const tokenId = jwtToken && jwtToken.id;
+
+    if (tokenId !== req.params.id) {
+        res.status(400).send("Unauthorized request");
+        return;
+    }
+
     User.findByIdAndRemove(req.params.id, function(err, user) {
         if (user) {
             // If user is NOT null, that means that the user object is removed.

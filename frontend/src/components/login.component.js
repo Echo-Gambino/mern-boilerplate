@@ -17,6 +17,7 @@ class Login extends Component {
     }
 
     onLoginSuccess() {
+        // Upon success, the user will be redirected to the main page
         this.props.history.push(MAIN_PAGE_ENDPOINT);
     }
 

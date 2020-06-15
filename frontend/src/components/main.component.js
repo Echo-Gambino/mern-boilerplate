@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { logoutUser } from "../actions/auth.action";
+import { getUser } from "../actions/test.action";
 
 import {
     REGISTER_PAGE_ENDPOINT,
@@ -57,6 +58,16 @@ class Main extends Component {
     renderLoggedInInteractables() {
         return (
         <div>
+            <button
+                onClick={() => {this.props.getUser(this.props.auth.user.id)}}
+                className="btn btn-primary"
+                style={{
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem"
+                }}
+            >
+                Get User
+            </button>
             <button
                 onClick={() => {this.props.logoutUser()}}
                 className="btn btn-secondary"
@@ -148,6 +159,7 @@ class Main extends Component {
 
 Main.propTypes = {
     logoutUser: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 }
 
@@ -160,5 +172,5 @@ const routerMain = withRouter(Main);
 // export default Main;
 export default connect(
     mapStateToProps,
-    { logoutUser }
+    { logoutUser, getUser }
 )(routerMain);
