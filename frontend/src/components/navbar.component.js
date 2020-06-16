@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import { Nav, Navbar as Navb, Dropdown, Image } from "react-bootstrap";
 import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
