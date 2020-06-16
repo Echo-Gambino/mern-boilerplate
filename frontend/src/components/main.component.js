@@ -138,7 +138,7 @@ class Main extends Component {
 
     render () {
         return (
-        <div>
+        <div style={{marginTop: "1em"}}>
             <div className="jumbotron text-center">
                 <h1>Welcome to yet another MERN stack boilerplate</h1>
                 <p>

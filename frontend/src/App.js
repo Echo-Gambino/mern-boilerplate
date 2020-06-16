@@ -11,6 +11,7 @@ import store from "./store";
 import authSetToken from "./util/auth/setToken.auth.util";
 import { setCurrentUser, logoutUser } from "./actions/auth.action";
 
+import Navbar from "./components/navbar.component";
 import Main from "./components/main.component";
 import Register from "./components/register.component";
 import Login from "./components/login.component";
@@ -48,6 +49,7 @@ class App extends Component {
     <Provider store={store}>
       <Router>
         <div className="App">
+          <Navbar />
           <div className="container">
             <Switch>
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
