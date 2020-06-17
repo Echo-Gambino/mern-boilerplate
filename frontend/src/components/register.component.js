@@ -1,10 +1,25 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import RegisterForm from "./register.form";
 
+import {
+    LOGIN_PAGE_ENDPOINT
+} from "../constants";
+
 class Register extends Component {
     
+    constructor(props) {
+        super(props);
+
+        this.onRegisterSuccess = this.onRegisterSuccess.bind(this);
+    }
+
+    onRegisterSuccess() {
+        // Upon success, the user will be redirected to the login page
+        this.props.history.push(LOGIN_PAGE_ENDPOINT);
+    }
+
     render() {
         return (
         <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
@@ -15,8 +30,8 @@ class Register extends Component {
             </div>
 
             <div className="col-6 mx-auto border" style={{padding: "1em"}}>
-                <RegisterForm />
-                <span>Already have an account? <b>Log in</b></span>
+                <RegisterForm onSuccess={this.onRegisterSuccess} />
+                <span>Already have an account? <Link to={LOGIN_PAGE_ENDPOINT}>Log in</Link></span>
             </div>
 
         </div>
@@ -25,4 +40,6 @@ class Register extends Component {
     
 }
 
-export default Register;
+const routerRegister = withRouter(Register);
+
+export default routerRegister;

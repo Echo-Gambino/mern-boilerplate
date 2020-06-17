@@ -1,5 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
+import { logoutUser } from "../actions/auth.action";
+import { getUser } from "../actions/test.action";
 
 import {
     REGISTER_PAGE_ENDPOINT,
@@ -11,23 +17,33 @@ class Main extends Component {
     constructor(props) {
         super(props);
     
+        this.renderGreeterMessage = this.renderGreeterMessage.bind(this);
+
+        this.renderLoggedOutInteractables = this.renderLoggedOutInteractables.bind(this);
+        this.renderLoggedInInteractables = this.renderLoggedInInteractables.bind(this);
+
         this.renderMainInteractables = this.renderMainInteractables.bind(this);
         this.renderFeatureShowcase = this.renderFeatureShowcase.bind(this);
     }
 
-    renderMainInteractables() {
+    renderGreeterMessage() {
+        const auth = this.props.auth;
+        const name = (auth.isAuthenticated) ? auth.user.name : "Anonymous";
+        const message = `Hello ${name}!`;
+
+        return ( <h4>{message}</h4> );
+    }
+
+    renderLoggedOutInteractables() {
         return (
-        <div
-            className="container border" 
-            style={{ marginTop: "2em", marginBottom: "2em", padding: "1em"}}
-        >
-            <h4>Hello Anonymous user!</h4>
-            <button 
-                className="btn btn-primary" 
+        <div>
+            <Link 
+                to={LOGIN_PAGE_ENDPOINT}
+                className="btn btn-primary"
                 style={{marginRight: "1em", marginLeft: "1em"}}
             >
-                Login
-            </button>
+                Log In
+            </Link>
             <Link 
                 to={REGISTER_PAGE_ENDPOINT}
                 className="btn btn-primary"
@@ -35,6 +51,47 @@ class Main extends Component {
             >
                 Register
             </Link>
+        </div>
+        );
+    }
+
+    renderLoggedInInteractables() {
+        return (
+        <div>
+            <button
+                onClick={() => {this.props.getUser(this.props.auth.user.id)}}
+                className="btn btn-primary"
+                style={{
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem"
+                }}
+            >
+                Get User
+            </button>
+            <button
+                onClick={() => {this.props.logoutUser()}}
+                className="btn btn-secondary"
+                style={{
+                    marginLeft: "0.5rem",
+                    marginRight: "0.5rem"
+                }}
+            >
+                Log Out
+            </button>
+        </div>
+        );
+    }
+
+    renderMainInteractables() {
+        const auth = this.props.auth;
+
+        return (
+        <div
+            className="container border" 
+            style={{ marginTop: "2em", marginBottom: "2em", padding: "1em"}}
+        >
+            { this.renderGreeterMessage() }
+            { (auth.isAuthenticated) ? this.renderLoggedInInteractables() : this.renderLoggedOutInteractables() }
         </div>
         );
     }
@@ -81,7 +138,7 @@ class Main extends Component {
 
     render () {
         return (
-        <div>
+        <div style={{marginTop: "1em"}}>
             <div className="jumbotron text-center">
                 <h1>Welcome to yet another MERN stack boilerplate</h1>
                 <p>
@@ -100,4 +157,20 @@ class Main extends Component {
     
 }
 
-export default Main;
+Main.propTypes = {
+    logoutUser: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const routerMain = withRouter(Main);
+
+// export default Main;
+export default connect(
+    mapStateToProps,
+    { logoutUser, getUser }
+)(routerMain);

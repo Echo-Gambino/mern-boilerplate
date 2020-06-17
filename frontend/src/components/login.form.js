@@ -4,14 +4,14 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
-import { registerUser } from "../actions/auth.action";
+import { loginUser } from "../actions/auth.action";
 
-class RegisterForm extends Component {
+class LoginForm extends Component {
 
     constructor(props) {
         super(props);
 
-        // Set the callback function (this.onSuccess)
+        // Set the callback function (this.onSuccess) 
         // if the prop's function is valid, otherwise, replace it with a dummy function.
         this.onSuccess = this.props.onSuccess ?? (() => false);
 
@@ -19,16 +19,13 @@ class RegisterForm extends Component {
         this.onSubmit = this.onSubmit.bind(this);
 
         this.state = {
-            name: "",
             email: "",
             password: "",
-            password2: "",
             errors: {}
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        // Update the state's error list if the next prop object is valid
         if (nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
@@ -43,17 +40,16 @@ class RegisterForm extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        const newUser = {
-            name: this.state.name,
+        const userData = {
             email: this.state.email,
-            password: this.state.password,
-            password2: this.state.password2
+            password: this.state.password
         };
 
-        // onSubmitSuccess is the callback function if registerUser is successful.
-        this.props.registerUser(
-            newUser,
-            this.onSuccess
+        // this.onSuccess is the callback function that the parent component specified
+        // to respond to once this component succeeded at its purpose (logging in the user).
+        this.props.loginUser(
+            userData,
+            this.onSuccess 
         );
     }
 
@@ -62,22 +58,6 @@ class RegisterForm extends Component {
 
         return (
         <form noValidate onSubmit={ this.onSubmit } style={{textAlign:"left"}}>
-
-            <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input
-                    className={classnames(
-                        "form-control",
-                        { invalid: errors.name }
-                    )}
-                    onChange={ this.onChange }
-                    value={ this.state.name }
-                    error={ errors.name }
-                    id="name"
-                    type="text"
-                />
-                <p className="text-danger">{ errors.name }</p>
-            </div>
 
             <div className="form-group">
                 <label htmlFor="email">Email</label>
@@ -108,38 +88,15 @@ class RegisterForm extends Component {
                     id="password"
                     type="password"
                 />
-                <p className="text-danger">{ errors.password }</p>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="password2">Confirm Password</label>
-                <input
-                    className={classnames(
-                        "form-control",
-                        { invalid: errors.password2 }
-                    )}
-                    onChange={ this.onChange }
-                    value={ this.state.password2 }
-                    error={ errors.password2 }
-                    id="password2"
-                    type="password"
-                />
-                <p className="text-danger">{ errors.password2 }</p>
-            </div>
-
-            <div className="form-group">
-                <p className="small" style={{textAlign: "center"}}>
-                    {"By clicking Agree & Register, \
-                    you agree to the Boilerplate User Agreement, \
-                    Privacy Policy, and Cookie Policy."}
-                </p>
+                <p className="text-danger">{ errors.password }{ errors.general }</p>
             </div>
 
             <div className="form-group">
                 <button type="submit" className="btn btn-block btn-primary">
-                    Agree and Register
+                    Log In
                 </button>
             </div>
+
 
         </form>
         );
@@ -147,18 +104,20 @@ class RegisterForm extends Component {
 
 }
 
-RegisterForm.propTypes = {
-    registerUser: PropTypes.func.isRequired,
+LoginForm.propTypes = {
+    loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+    auth: state.auth,
     errors: state.errors
 });
 
-const routeRegisterForm = withRouter(RegisterForm);
+const routerLoginForm = withRouter(LoginForm);
 
 export default connect(
     mapStateToProps,
-    { registerUser }
-)(routeRegisterForm);
+    { loginUser }
+)(routerLoginForm);
