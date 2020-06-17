@@ -17,14 +17,14 @@ class Profile extends Component {
 
     renderProfileCard() {
         return (
-        <div class="card" style={{width: "22em"}}>
-            <img class="card-img-top" src={icon} alt="Card image cap" />
-            <div class="card-body">
-                <h3 class="card-title" style={{margin: "0"}}>Username</h3>
-                <h6 class="card-title" style={{margin: "0"}}>test@email.com</h6>
+        <div className="card">
+            <img className="card-img-top" src={icon} alt="Card image cap" />
+            <div className="card-body">
+                <h3 className="card-title" style={{margin: "0"}}>Username</h3>
+                <h6 className="card-title" style={{margin: "0"}}>test@email.com</h6>
                 <br/>
-                <p class="card-text" style={{textAlign: "left"}}>This is sample text, nothing to see here.</p>
-                <button href="#" class="btn btn-primary btn-block">Settings</button>
+                <p className="card-text" style={{textAlign: "left"}}>This is sample text, nothing to see here.</p>
+                <button href="#" className="btn btn-primary btn-block">Settings</button>
             </div>
         </div>
         );
@@ -38,10 +38,10 @@ class Profile extends Component {
             >
                 Highlights
             </h1>
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Highlight</h3>
-                    <p class="card-text">This is sample text, nothing to see here.</p>
+            <div className="card">
+                <div className="card-body">
+                    <h3 className="card-title">Highlight</h3>
+                    <p className="card-text">This is sample text, nothing to see here.</p>
                 </div>
             </div>
         </div>
@@ -56,10 +56,10 @@ class Profile extends Component {
             >
                 Posts
             </h1>
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Post</h3>
-                    <p class="card-text">This is sample text, nothing to see here.</p>
+            <div className="card">
+                <div className="card-body">
+                    <h3 className="card-title">Post</h3>
+                    <p className="card-text">This is sample text, nothing to see here.</p>
                 </div>
             </div>
         </div>
@@ -69,11 +69,11 @@ class Profile extends Component {
     render() {
         return (
         <div>
-            <div class="row">
-                <div class="col">
+            <div className="row">
+                <div className="col">
                     { this.renderProfileCard() }
                 </div>
-                <div class="col-8">
+                <div className="col-8">
                     { this.renderHighlightSection() }
                 </div>
             </div>
