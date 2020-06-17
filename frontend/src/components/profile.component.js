@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { getUser } from "../actions/profile.action";
+
 import icon from "../icon.png";
+
+import {
+    PROFILESETTINGS_PAGE_ENDPOINT,
+} from "../constants";
 
 class Profile extends Component {
 
@@ -13,18 +19,45 @@ class Profile extends Component {
         this.renderProfileCard = this.renderProfileCard.bind(this);
         this.renderHighlightSection = this.renderHighlightSection.bind(this);
         this.renderPostsSection = this.renderPostsSection.bind(this);
+
+        this.testCallBack = this.testCallBack.bind(this);
+
+        this.state = {
+            name: "",
+            email: "",
+            bio: ""
+        };
+    }
+
+    componentDidMount() {
+        const auth = this.props.auth;
+        this.props.getUser(auth.user.id, this.testCallBack);
+    }
+
+    testCallBack(args) {
+        console.log(args);
+
+        this.setState({
+            name: (args.data.name) ? args.data.name : "Unknown",
+            email: (args.data.email) ? args.data.email : "unknown@email.com",
+            bio: (args.data.bio) ? args.data.bio : "Placeholder"
+        });
     }
 
     renderProfileCard() {
+        const auth = this.props.auth;
+    
+        const { name, email, bio } = this.state;
+
         return (
         <div className="card">
             <img className="card-img-top" src={icon} alt="Card image cap" />
             <div className="card-body">
-                <h3 className="card-title" style={{margin: "0"}}>Username</h3>
-                <h6 className="card-title" style={{margin: "0"}}>test@email.com</h6>
+                <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
+                <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
                 <br/>
-                <p className="card-text" style={{textAlign: "left"}}>This is sample text, nothing to see here.</p>
-                <button href="#" className="btn btn-primary btn-block">Settings</button>
+                <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
+                <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="btn btn-primary btn-block">Settings</Link>
             </div>
         </div>
         );
@@ -89,6 +122,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
+    getUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 }
 
@@ -100,5 +134,5 @@ const routerProfile = withRouter(Profile);
 
 export default connect(
     mapStateToProps,
-    { }
+    { getUser }
 )(routerProfile);

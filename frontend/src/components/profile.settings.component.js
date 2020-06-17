@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -7,6 +7,10 @@ import ProfileInfo from "./profile.info.form";
 import ProfileSecurity from "./profile.security.form";
 
 import icon from "../icon.png";
+
+import {
+    PROFILE_PAGE_ENDPOINT
+} from "../constants";
 
 class ProfileSettings extends Component {
 
@@ -35,13 +39,20 @@ class ProfileSettings extends Component {
 
         const { renderView } = this.state;
 
+        const auth = this.props.auth;
+
         return (
         <div className="card">
             <img className="card-img-top" src={icon} alt="Card image cap" />
             <div className="card-body">
-                <div className="list-group list-group-flush">
+                <Link to={PROFILE_PAGE_ENDPOINT + auth.user.id} className="btn btn-outline-secondary btn-block">
+                    Back to Profile
+                </Link>
+
+                <hr />
+
+                <div className="list-group">
                     <button 
-                        href="#Profile" 
                         className={
                             "list-group-item list-group-item-action" + 
                                 ((renderView === PROFILEINFO_VIEW) ? " active" : " ")
@@ -51,7 +62,6 @@ class ProfileSettings extends Component {
                         Profile
                     </button>
                     <button 
-                        href="#Security" 
                         className={
                             "list-group-item list-group-item-action" + 
                                 ((renderView === PROFILESECURITY_VIEW) ? " active" : " ")
@@ -94,4 +104,17 @@ class ProfileSettings extends Component {
 
 }
 
-export default ProfileSettings;
+ProfileSettings.propTypes = {
+    auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+const routeProfileSettings = withRouter(ProfileSettings);
+
+export default connect(
+    mapStateToProps,
+    { }
+)(routeProfileSettings);

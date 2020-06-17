@@ -59,8 +59,8 @@ class App extends Component {
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
               <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
               <Route exact path={LOGIN_PAGE_ENDPOINT} component={Login} />
-              <Route exact path={PROFILE_PAGE_ENDPOINT} component={Profile} />
-              <Route exact path={PROFILESETTINGS_PAGE_ENDPOINT} component={ProfileSettings} />
+              <Route exact path={PROFILESETTINGS_PAGE_ENDPOINT + ':id'} component={ProfileSettings} />
+              <Route exact path={PROFILE_PAGE_ENDPOINT + ':id'} component={Profile} />
             </Switch>
           </div>
         </div>

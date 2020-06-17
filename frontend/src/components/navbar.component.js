@@ -12,7 +12,9 @@ import { connect } from 'react-redux';
 import {
     MAIN_PAGE_ENDPOINT,
     LOGIN_PAGE_ENDPOINT,
-    REGISTER_PAGE_ENDPOINT
+    REGISTER_PAGE_ENDPOINT,
+    PROFILE_PAGE_ENDPOINT,
+    PROFILESETTINGS_PAGE_ENDPOINT
 } from "../constants";
 
 const UserImageDropdown = React.forwardRef(({ children, onClick}, ref) => (
@@ -72,9 +74,9 @@ class Navbar extends Component {
                 <span>Logged in as <br/><b>{auth.user.name}</b></span>
             </div>
             <Dropdown.Divider />
-            <Link to="" className="dropdown-item">My Profile</Link>
+            <Link to={PROFILE_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">My Profile</Link>
             <Dropdown.Divider />
-            <Link to="" className="dropdown-item">Settings</Link>
+            <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Settings</Link>
             <button className="dropdown-item" 
                     onClick={() => {this.props.logoutUser()}}
             >

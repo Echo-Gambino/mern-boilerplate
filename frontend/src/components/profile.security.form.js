@@ -15,6 +15,9 @@ class ProfileSecurity extends Component {
         this.renderChangePassword = this.renderChangePassword.bind(this);
         this.renderChangePasswordForm = this.renderChangePasswordForm.bind(this);
 
+        this.renderDeleteProfile = this.renderDeleteProfile.bind(this);
+        this.renderDeleteProfileForm = this.renderDeleteProfileForm.bind(this);
+
         this.state = {
             oldPassword: "",
             newPassword: "",
@@ -39,6 +42,36 @@ class ProfileSecurity extends Component {
         console.log("Submitting:");
         console.log(updatedPassword);
 
+        /*
+        this.props.updatePassword(
+            updatedPassword
+        );
+        */
+
+    }
+
+    renderDeleteProfileForm() {
+        return (
+        <div>
+            <p>Warning: Once you delete your account, you cannot recover the and its data. Please be careful.</p>
+            <button 
+                class="btn btn-outline-danger" 
+                style={{float: "left"}}
+            >
+                Delete Account
+            </button>
+        </div>
+        );
+    }
+
+    renderDeleteProfile() {
+        return (
+        <div>
+            <h3 className="text-danger" style={{ textAlign: "left"}}>Delete Profile</h3>
+            <hr style={{ marginTop: "0em" }} />
+            { this.renderDeleteProfileForm() }
+        </div>
+        );
     }
 
     renderChangePasswordForm() {
@@ -116,6 +149,10 @@ class ProfileSecurity extends Component {
         return (
         <div className="container" style={{paddingTop: "1em", paddingBottom: "1em"}}>
             { this.renderChangePassword() }
+
+            <br />
+
+            { this.renderDeleteProfile() }
         </div>
         );
     }
