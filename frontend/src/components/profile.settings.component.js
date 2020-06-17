@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import ProfileInfo from "./profile.info.form";
+import ProfileSecurity from "./profile.security.form";
 
 import icon from "../icon.png";
 
@@ -15,26 +16,50 @@ class ProfileSettings extends Component {
         this.renderSideBar = this.renderSideBar.bind(this);
         this.renderMainForm = this.renderMainForm.bind(this);
 
+        this.constants = {
+            PROFILEINFO_VIEW: "profileInfo",
+            PROFILESECURITY_VIEW: "profileSecurity"
+        };
+        Object.freeze(this.constants);
+
+        this.state = {
+            renderView: this.constants.PROFILEINFO_VIEW
+        };
     }
 
     renderSideBar() {
+        const {
+            PROFILEINFO_VIEW,
+            PROFILESECURITY_VIEW
+        } = this.constants;
+
+        const { renderView } = this.state;
+
         return (
         <div className="card">
             <img className="card-img-top" src={icon} alt="Card image cap" />
             <div className="card-body">
                 <div className="list-group list-group-flush">
-                    <a 
+                    <button 
                         href="#Profile" 
-                        className="list-group-item list-group-item-action"
+                        className={
+                            "list-group-item list-group-item-action" + 
+                                ((renderView === PROFILEINFO_VIEW) ? " active" : " ")
+                        }
+                        onClick={() => {this.setState({renderView: PROFILEINFO_VIEW})}}
                     >
                         Profile
-                    </a>
-                    <a 
+                    </button>
+                    <button 
                         href="#Security" 
-                        className="list-group-item list-group-item-action"
+                        className={
+                            "list-group-item list-group-item-action" + 
+                                ((renderView === PROFILESECURITY_VIEW) ? " active" : " ")
+                        }
+                        onClick={() => {this.setState({renderView: PROFILESECURITY_VIEW})}}
                     >
                         Security
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -42,9 +67,14 @@ class ProfileSettings extends Component {
     }
 
     renderMainForm() {
-        return (
-        <ProfileInfo />
-        );
+        switch (this.state.renderView) {
+            case this.constants.PROFILEINFO_VIEW:
+                return <ProfileInfo />;
+            case this.constants.PROFILESECURITY_VIEW:
+                return <ProfileSecurity />;
+            default:
+                return <></>;
+        }
     }
 
     render() {

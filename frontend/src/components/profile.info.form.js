@@ -73,7 +73,7 @@ class ProfileInfo extends Component {
                         "form-control",
                         { invalid: errors.bio }
                     )}
-                    style={{minHeight: "16em"}}
+                    style={{minHeight: "12em"}}
                     onChange = { this.onChange }
                     value={ this.state.bio }
                     error={ errors.bio }
@@ -83,7 +83,7 @@ class ProfileInfo extends Component {
             </div>
 
             <div className="form-group">
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-outline-primary">
                     Update
                 </button>
             </div>
