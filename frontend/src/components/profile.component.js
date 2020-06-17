@@ -23,8 +23,8 @@ class Profile extends Component {
                 <h3 class="card-title" style={{margin: "0"}}>Username</h3>
                 <h6 class="card-title" style={{margin: "0"}}>test@email.com</h6>
                 <br/>
-                <p class="card-text">This is sample text, nothing to see here.</p>
-                <a href="#" class="btn btn-primary">Dummy Follow</a>
+                <p class="card-text" style={{textAlign: "left"}}>This is sample text, nothing to see here.</p>
+                <button href="#" class="btn btn-primary btn-block">Settings</button>
             </div>
         </div>
         );
@@ -69,8 +69,6 @@ class Profile extends Component {
     render() {
         return (
         <div>
-            <br/>
-
             <div class="row">
                 <div class="col">
                     { this.renderProfileCard() }

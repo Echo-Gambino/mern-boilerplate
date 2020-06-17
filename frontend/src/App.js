@@ -52,7 +52,7 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navbar />
-          <div className="container">
+          <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
             <Switch>
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
               <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />

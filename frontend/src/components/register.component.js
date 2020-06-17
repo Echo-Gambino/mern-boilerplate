@@ -22,7 +22,7 @@ class Register extends Component {
 
     render() {
         return (
-        <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
+        <div className="container">
 
             <div style={{marginBottom: "2em"}}>
                 <h2 className="font-weight-bold">BOILERPLATE</h2>
