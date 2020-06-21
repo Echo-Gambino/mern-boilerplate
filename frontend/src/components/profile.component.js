@@ -35,8 +35,6 @@ class Profile extends Component {
     }
 
     testCallBack(args) {
-        console.log(args);
-
         this.setState({
             name: (args.data.name) ? args.data.name : "Unknown",
             email: (args.data.email) ? args.data.email : "unknown@email.com",
