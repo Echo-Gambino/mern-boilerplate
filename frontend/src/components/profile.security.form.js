@@ -4,6 +4,12 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
+import DeleteProfile from "./profile.delete.subform";
+
+import {
+    MAIN_PAGE_ENDPOINT
+} from "../constants";
+
 class ProfileSecurity extends Component {
 
     constructor(props) {
@@ -11,6 +17,8 @@ class ProfileSecurity extends Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+
+        this.onDelete = this.onDelete.bind(this);
 
         this.renderChangePassword = this.renderChangePassword.bind(this);
         this.renderChangePasswordForm = this.renderChangePasswordForm.bind(this);
@@ -50,17 +58,18 @@ class ProfileSecurity extends Component {
 
     }
 
+    onDelete() {
+        this.props.history.push(MAIN_PAGE_ENDPOINT);
+    }
+
     renderDeleteProfileForm() {
+        const userName = this.props.auth.user.name;
+
         return (
-        <div>
-            <p>Warning: Once you delete your account, you cannot recover the and its data. Please be careful.</p>
-            <button 
-                class="btn btn-outline-danger" 
-                style={{float: "left"}}
-            >
-                Delete Account
-            </button>
-        </div>
+            <DeleteProfile 
+                onSuccess={this.onDelete} 
+                confirmText={`delete ${userName}'s account`}
+            />
         );
     }
 
@@ -160,10 +169,12 @@ class ProfileSecurity extends Component {
 }
 
 ProfileSecurity.propTypes = {
+    auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+    auth: state.auth,
     errors: state.errors
 });
 

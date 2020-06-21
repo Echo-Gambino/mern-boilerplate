@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Fade, Collapse } from "react-bootstrap";
+import { Fade } from "react-bootstrap";
 import classnames from "classnames";
 
 import { getUser, updateUser } from "../actions/profile.action";

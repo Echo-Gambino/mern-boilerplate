@@ -9,3 +9,4 @@ export const API_GETUSER_ENDPOINT = `/users/`;
 export const API_LOGIN_ENDPOINT = `/users/login`;
 export const API_REGISTER_ENDPOINT = `/users/create`;
 export const API_UPDATEUSER_ENDPOINT = `/users/update/`;
+export const API_REMOVEUSER_ENDPOINT = `/users/remove/`;
