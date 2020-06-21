@@ -9,7 +9,8 @@ import { getUser } from "../actions/test.action";
 
 import {
     REGISTER_PAGE_ENDPOINT,
-    LOGIN_PAGE_ENDPOINT
+    LOGIN_PAGE_ENDPOINT,
+    PROFILE_PAGE_ENDPOINT,
 } from "../constants";
 
 class Main extends Component {
@@ -56,18 +57,20 @@ class Main extends Component {
     }
 
     renderLoggedInInteractables() {
+        const auth = this.props.auth;
+
         return (
         <div>
-            <button
-                onClick={() => {this.props.getUser(this.props.auth.user.id)}}
+            <Link
+                to={PROFILE_PAGE_ENDPOINT + auth.user.id}
                 className="btn btn-primary"
                 style={{
                     marginLeft: "0.5rem",
                     marginRight: "0.5rem"
                 }}
             >
-                Get User
-            </button>
+                View Profile
+            </Link>
             <button
                 onClick={() => {this.props.logoutUser()}}
                 className="btn btn-secondary"
@@ -138,7 +141,7 @@ class Main extends Component {
 
     render () {
         return (
-        <div style={{marginTop: "1em"}}>
+        <div>
             <div className="jumbotron text-center">
                 <h1>Welcome to yet another MERN stack boilerplate</h1>
                 <p>

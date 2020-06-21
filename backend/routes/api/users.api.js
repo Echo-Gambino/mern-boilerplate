@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const isEmpty = require("is-empty");
 
+const validatePasswordUpdateData = require("../../util/users/passwordUpdate.validate");
+const validateProfileInfo = require("../../util/users/profileInfo.validate");
 const validateAuthToken = require("../../util/users/authToken.validate");
 const validateRegData = require("../../util/users/register.validate");
 const validateLgnData = require("../../util/users/login.validate");
@@ -94,7 +97,7 @@ router.post("/create", (req, res) => {
                     if (err) throw err;
                     newUser.password = hash;
                     newUser.save()
-                            .then(user => res.json(user))
+                            .then(user => res.json("Account registration complete."))
                             .catch(err => console.log(user))
                 })
             });
@@ -159,9 +162,103 @@ router.post("/login", (req, res) => {
 
 });
 
+// @route POST <api>/update/:id
+// @desc Update a user item from the server's database by id
+// @access PRIVATE
+router.post('/update/:id', (req, res) => {
+    const jwtToken = validateAuthToken(req.headers.authorization);
+    const tokenId = jwtToken && jwtToken.id;
+
+    if (tokenId !== req.params.id) {
+        res.status(400).send("Unauthorized request");
+        return;
+    }
+
+    // Execute validation
+    const { errors, isValid } = validateProfileInfo(req.body);
+
+    // Check validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findById(req.params.id, function(err, user) {
+        if (!user) {
+            // HTTP status 404 means "NOT FOUND" error
+            res.status(404).send('data is not found');
+        } else {
+            const data = req && req.body;
+            // DO NOT MODIFY CRITICAL FIELDS (email/username and password)
+            user.name = !isEmpty(data.name) ? data.name : user.name;
+            user.bio = !isEmpty(data.bio) ? data.bio : user.bio;
+
+            user.save().then(user => {
+                // Send out success message when the user is successfully updated
+                res.json("User updated");
+            })
+            .catch(err => {
+                // HTTP status 400 means "BAD REQUEST" errors
+                res.status(400).send("Update not possible");
+            });
+        }
+    });
+});
+
+// @route POST <api>/update/password/:id
+// @desc Update a user item from the server's database by id
+// @access PRIVATE
+router.post("/update/password/:id", (req, res) => {
+    const jwtToken = validateAuthToken(req.headers.authorization);
+    const tokenId = jwtToken && jwtToken.id;
+
+    if (tokenId !== req.params.id) {
+        res.status(400).send("Unauthorized request");
+        return;
+    }
+
+    // Execute validation
+    const { errors, isValid } = validatePasswordUpdateData(req.body);
+
+    // Check validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const invalidCredentialsMsg = "Invalid Credentials. Please try again.";
+
+    User.findById(req.params.id, function (err, user) {
+        if (!user) {
+            return res.status(404).json("Account not found.");
+        } else {
+            const password = req.body.oldPassword;
+            const newPassword = req.body.newPassword;
+
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if (!isMatch) {
+                        // bcrypt failed to match the payload's password; invalid credentials
+                        return res.status(400).json({ ...errors, oldPassword: invalidCredentialsMsg });
+                    } else {
+                        // Hash password before saving in database
+                        bcrypt.genSalt(10, (err, salt) => {
+                            bcrypt.hash(newPassword, salt, (err, hash) => {
+                                if (err) throw err;
+                                user.password = hash;
+                                user.save()
+                                    .then(user => res.json("Password update complete."))
+                                    .catch(err => console.log(user))
+                            })
+                        });
+                    }
+                })
+        }
+    });
+
+});
+
 // @route POST <api>/remove/:id
-// @desc Remove a user item from ther server's database by id
-// @access PRIVATE (Temporarily PUBLIC)
+// @desc Remove a user item from the server's database by id
+// @access PRIVATE
 router.post("/remove/:id", (req, res) => {
     const jwtToken = validateAuthToken(req.headers.authorization);
     const tokenId = jwtToken && jwtToken.id;

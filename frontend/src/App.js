@@ -16,12 +16,14 @@ import Main from "./components/main.component";
 import Register from "./components/register.component";
 import Login from "./components/login.component";
 import Profile from "./components/profile.component";
+import ProfileSettings from "./components/profile.settings.component";
 
 import {
   MAIN_PAGE_ENDPOINT,
   REGISTER_PAGE_ENDPOINT,
   LOGIN_PAGE_ENDPOINT,
   PROFILE_PAGE_ENDPOINT,
+  PROFILESETTINGS_PAGE_ENDPOINT,
 } from "./constants";
 
 // Check for token to keep user logged in
@@ -52,12 +54,13 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navbar />
-          <div className="container">
+          <div className="container" style={{marginTop: "2em", marginBottom: "2em"}}>
             <Switch>
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
               <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
               <Route exact path={LOGIN_PAGE_ENDPOINT} component={Login} />
-              <Route exact path={PROFILE_PAGE_ENDPOINT} component={Profile} />
+              <Route exact path={PROFILESETTINGS_PAGE_ENDPOINT + ':id'} component={ProfileSettings} />
+              <Route exact path={PROFILE_PAGE_ENDPOINT + ':id'} component={Profile} />
             </Switch>
           </div>
         </div>

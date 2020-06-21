@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import { getUser } from "../actions/profile.action";
+
 import icon from "../icon.png";
+
+import {
+    PROFILESETTINGS_PAGE_ENDPOINT,
+} from "../constants";
 
 class Profile extends Component {
 
@@ -13,18 +19,43 @@ class Profile extends Component {
         this.renderProfileCard = this.renderProfileCard.bind(this);
         this.renderHighlightSection = this.renderHighlightSection.bind(this);
         this.renderPostsSection = this.renderPostsSection.bind(this);
+
+        this.testCallBack = this.testCallBack.bind(this);
+
+        this.state = {
+            name: "",
+            email: "",
+            bio: ""
+        };
+    }
+
+    componentDidMount() {
+        const auth = this.props.auth;
+        this.props.getUser(auth.user.id, this.testCallBack);
+    }
+
+    testCallBack(args) {
+        this.setState({
+            name: (args.data.name) ? args.data.name : "Unknown",
+            email: (args.data.email) ? args.data.email : "unknown@email.com",
+            bio: (args.data.bio) ? args.data.bio : "Placeholder"
+        });
     }
 
     renderProfileCard() {
+        const auth = this.props.auth;
+    
+        const { name, email, bio } = this.state;
+
         return (
-        <div class="card" style={{width: "22em"}}>
-            <img class="card-img-top" src={icon} alt="Card image cap" />
-            <div class="card-body">
-                <h3 class="card-title" style={{margin: "0"}}>Username</h3>
-                <h6 class="card-title" style={{margin: "0"}}>test@email.com</h6>
+        <div className="card">
+            <img className="card-img-top" src={icon} alt="Card image cap" />
+            <div className="card-body">
+                <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
+                <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
                 <br/>
-                <p class="card-text">This is sample text, nothing to see here.</p>
-                <a href="#" class="btn btn-primary">Dummy Follow</a>
+                <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
+                <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="btn btn-primary btn-block">Settings</Link>
             </div>
         </div>
         );
@@ -38,10 +69,10 @@ class Profile extends Component {
             >
                 Highlights
             </h1>
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Highlight</h3>
-                    <p class="card-text">This is sample text, nothing to see here.</p>
+            <div className="card">
+                <div className="card-body">
+                    <h3 className="card-title">Highlight</h3>
+                    <p className="card-text">This is sample text, nothing to see here.</p>
                 </div>
             </div>
         </div>
@@ -56,10 +87,10 @@ class Profile extends Component {
             >
                 Posts
             </h1>
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title">Post</h3>
-                    <p class="card-text">This is sample text, nothing to see here.</p>
+            <div className="card">
+                <div className="card-body">
+                    <h3 className="card-title">Post</h3>
+                    <p className="card-text">This is sample text, nothing to see here.</p>
                 </div>
             </div>
         </div>
@@ -69,13 +100,11 @@ class Profile extends Component {
     render() {
         return (
         <div>
-            <br/>
-
-            <div class="row">
-                <div class="col">
+            <div className="row">
+                <div className="col">
                     { this.renderProfileCard() }
                 </div>
-                <div class="col-8">
+                <div className="col-8">
                     { this.renderHighlightSection() }
                 </div>
             </div>
@@ -91,6 +120,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
+    getUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 }
 
@@ -102,5 +132,5 @@ const routerProfile = withRouter(Profile);
 
 export default connect(
     mapStateToProps,
-    { }
+    { getUser }
 )(routerProfile);
