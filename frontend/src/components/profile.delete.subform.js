@@ -43,7 +43,7 @@ class DeleteProfile extends Component {
                 To confirm account deletion, please type "<b>{this.state.confirmText}</b>"
             </p>
             
-            <div class="form-row">
+            <div className="form-row">
                 <input 
                     type="text" 
                     className="col"

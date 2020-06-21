@@ -1,39 +1,53 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
-import DeleteProfile from "./profile.delete.subform";
-import UpdatePassword from "./profile.updatepassword.subform";
+import { Fade } from "react-bootstrap";
 
-import {
-    MAIN_PAGE_ENDPOINT
-} from "../constants";
+import { updateUserPassword } from "../actions/profile.action";
 
-class ProfileSecurity extends Component {
+class UpdatePassword extends Component {
 
     constructor(props) {
         super(props);
 
+        // Set the callback function (this.onSuccess) 
+        // if the prop's function is valid, otherwise, replace it with a dummy function.
+        this.onSuccess = this.props.onSuccess ?? (() => false);
+
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
-        this.onDelete = this.onDelete.bind(this);
-        this.onUpdatePassword = this.onUpdatePassword.bind(this);
+        this.showSuccessAlert = this.showSuccessAlert.bind(this);
 
-        this.renderChangePassword = this.renderChangePassword.bind(this);
-        this.renderChangePasswordForm = this.renderChangePasswordForm.bind(this);
+        this.renderSuccessAlert = this.renderSuccessAlert.bind(this);
 
-        this.renderDeleteProfile = this.renderDeleteProfile.bind(this);
-        this.renderDeleteProfileForm = this.renderDeleteProfileForm.bind(this);
+        this.timerId = null;
 
         this.state = {
             oldPassword: "",
             newPassword: "",
             newPassword2: "",
+            form: {
+                success: false
+            },
             errors: {}
-        };
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.timerId) {
+            clearTimeout(this.timerId);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
     }
 
     onChange(e) {
@@ -43,60 +57,53 @@ class ProfileSecurity extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        const updatedPassword = {
+        const userId = this.props.auth.user.id;
+
+        const data = {
+            id: userId,
             oldPassword: this.state.oldPassword,
             newPassword: this.state.newPassword,
             newPassword2: this.state.newPassword2
         };
 
-        console.log("Submitting:");
-        console.log(updatedPassword);
+        this.setState({ errors: {} });
 
-        /*
-        this.props.updatePassword(
-            updatedPassword
-        );
-        */
-
+        this.props.updateUserPassword(data, (() => {
+            this.setState({
+                oldPassword: "", 
+                newPassword: "", 
+                newPassword2: ""
+            });
+            this.showSuccessAlert();
+            this.onSuccess();
+        }));
     }
 
-    onDelete() {
-        this.props.history.push(MAIN_PAGE_ENDPOINT);
+    showSuccessAlert() {
+        this.setState({ form: {...this.state.form, success: true } });
+
+        if (this.timerId !== null) {
+            clearTimeout(this.timerId);
+        }
+
+        this.timerId = setTimeout(() => {
+            this.setState({ form: {...this.state.form, success: false } });
+            this.timerId = null;
+        }, 3000);
     }
 
-    onUpdatePassword() {
-        // ...
-    }
-
-    renderDeleteProfileForm() {
-        const userName = this.props.auth.user.name;
-
+    renderSuccessAlert() {
         return (
-            <DeleteProfile 
-                onSuccess={this.onDelete} 
-                confirmText={`delete ${userName}'s account`}
-            />
+        <Fade in={this.state.form.success} unmountOnExit={true}>
+            <div className="alert alert-success">
+                <span>Successfully updated account password.</span>
+            </div>
+        </Fade>
         );
     }
 
-    renderDeleteProfile() {
-        return (
-        <div>
-            <h3 className="text-danger" style={{ textAlign: "left"}}>Delete Profile</h3>
-            <hr style={{ marginTop: "0em" }} />
-            { this.renderDeleteProfileForm() }
-        </div>
-        );
-    }
-
-    renderChangePasswordForm() {
+    render() {
         const { errors } = this.state;
-
-        return (
-            <UpdatePassword
-                onSuccess={this.onUpdatePassword}
-            />
-        );
 
         return (
         <form noValidate onSubmit={ this.onSubmit } style={{textAlign: "left"}}>
@@ -114,6 +121,7 @@ class ProfileSecurity extends Component {
                     id="oldPassword"
                     type="password"
                 />
+                <p className="text-danger">{ errors.oldPassword }</p>
             </div>
 
             <div className="form-group">
@@ -129,6 +137,7 @@ class ProfileSecurity extends Component {
                     id="newPassword"
                     type="password"
                 />
+                <p className="text-danger">{ errors.newPassword }</p>
             </div>
 
             <div className="form-group">
@@ -144,6 +153,11 @@ class ProfileSecurity extends Component {
                     id="newPassword2"
                     type="password"
                 />
+                <p className="text-danger">{ errors.newPassword2 }</p>
+            </div>
+
+            <div className="form-group">
+                { this.renderSuccessAlert() }
             </div>
 
             <div className="form-group">
@@ -156,31 +170,10 @@ class ProfileSecurity extends Component {
         );
     }
 
-    renderChangePassword() {
-        return (
-        <div>
-            <h3 style={{ textAlign: "left" }}>Change Password</h3>
-            <hr style={{ marginTop: "0em" }} />
-            { this.renderChangePasswordForm() }
-        </div>
-        );
-    }
-
-    render() {
-        return (
-        <div className="container" style={{paddingTop: "1em", paddingBottom: "1em"}}>
-            { this.renderChangePassword() }
-
-            <br />
-
-            { this.renderDeleteProfile() }
-        </div>
-        );
-    }
-
 }
 
-ProfileSecurity.propTypes = {
+UpdatePassword.propTypes = {
+    updateUserPassword: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
@@ -190,9 +183,7 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-const routeProfileSecurity = withRouter(ProfileSecurity);
-
 export default connect(
     mapStateToProps,
-    {  }
-)(routeProfileSecurity);
+    { updateUserPassword }
+)(UpdatePassword);

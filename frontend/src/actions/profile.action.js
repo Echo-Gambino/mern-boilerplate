@@ -7,6 +7,7 @@ import { GET_ERRORS } from "./types.action";
 import {
     API_GETUSER_ENDPOINT,
     API_UPDATEUSER_ENDPOINT,
+    API_UPDATEUSERPASSWORD_ENDPOINT,
     API_REMOVEUSER_ENDPOINT
 } from "../constants";
 
@@ -28,6 +29,19 @@ export const getUser = (id, callback) => dispatch => {
 
 export const updateUser = (data, callback) => dispatch => {
     axios.post(API_UPDATEUSER_ENDPOINT + data.id, data)
+        .then(res => {
+            callback(res);
+        })
+        .catch(err => {
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            });
+        });
+};
+
+export const updateUserPassword = (data, callback) => dispatch => {
+    axios.post(API_UPDATEUSERPASSWORD_ENDPOINT + data.id, data)
         .then(res => {
             callback(res);
         })

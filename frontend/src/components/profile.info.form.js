@@ -126,7 +126,7 @@ class ProfileInfo extends Component {
         return (
         <Fade in={this.state.form.success} unmountOnExit={true}>
             <div className="alert alert-success">
-                <span>Something Something</span>
+                <span>Successfully updated user information.</span>
             </div>
         </Fade>
         );

@@ -237,7 +237,7 @@ router.post("/update/password/:id", (req, res) => {
                 .then(isMatch => {
                     if (!isMatch) {
                         // bcrypt failed to match the payload's password; invalid credentials
-                        return res.status(400).json({ ...errors, newPassword: invalidCredentialsMsg });
+                        return res.status(400).json({ ...errors, oldPassword: invalidCredentialsMsg });
                     } else {
                         // Hash password before saving in database
                         bcrypt.genSalt(10, (err, salt) => {
