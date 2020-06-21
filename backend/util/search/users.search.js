@@ -6,7 +6,7 @@ const cleanUserData = require("../../util/users/userData.clean");
 const User = require("../../models/user.model");
 
 module.exports = function searchUsers(searchData) {
-    let searchString = !isEmpty(searchData.search) ? searchData.search : "";
+    let searchString = !isEmpty(searchData.searchTerm) ? searchData.searchTerm : "";
 
     // Attempt to sanitize input
     searchString = searchString.replace('|', ' ');
@@ -18,8 +18,8 @@ module.exports = function searchUsers(searchData) {
     }
 
     let searchTokenList = [];
-    searchTokenList.push(searchData.search);
-    searchTokenList.push(...searchData.search.split(' '));
+    searchTokenList.push(searchData.searchTerm);
+    searchTokenList.push(...searchData.searchTerm.split(' '));
 
     let searchTokens = new Set(searchTokenList);
 
@@ -43,7 +43,7 @@ module.exports = function searchUsers(searchData) {
                 let output = [];
 
                 for (let i = 0; i < users.length; i++) {
-                    output.push(cleanUserData(users[i]));
+                    output.push({ ...cleanUserData(users[i]), type: 'User' });
                 }
 
                 resolve(output);

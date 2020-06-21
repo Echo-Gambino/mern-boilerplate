@@ -6,10 +6,10 @@ module.exports = function validateQuery(query) {
     let errors = {};
 
     // Convert empty fields to an empty string
-    query.search = !isEmpty(query.search) ? query.search : "";
+    query.searchTerm = !isEmpty(query.searchTerm) ? query.searchTerm : "";
 
-    if (Validator.isEmpty(query.search)) {
-        errors.search = "Search term is required";
+    if (Validator.isEmpty(query.searchTerm)) {
+        errors.searchTerm = "Search term is required";
     }
 
     return {

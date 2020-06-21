@@ -5,10 +5,17 @@ const router = express.Router();
 const searchUsers = require("../../util/search/users.search");
 const validateQuery = require("../../util/search/query.validate");
 
-router.get("/", [
-    check('search').trim().escape(),
+router.post("/", [
+    check('searchTerm').trim().escape(),
 ], (req, res) => {
-    const { errors, isValid } = validateQuery(req.body);
+
+    console.log(req.body);
+
+    const query = {
+        searchTerm: req.body.searchTerm
+    }
+
+    const { errors, isValid } = validateQuery(query);
 
     // Check validation
     if (!isValid) {
@@ -16,7 +23,7 @@ router.get("/", [
     }
 
     // Apply the search onto users
-    let pUserQuery = searchUsers(req.body);
+    let pUserQuery = searchUsers(query);
 
     // Compile all the searches into one list
     Promise.all(
