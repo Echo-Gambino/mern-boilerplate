@@ -8,9 +8,6 @@ const validateQuery = require("../../util/search/query.validate");
 router.post("/", [
     check('searchTerm').trim().escape(),
 ], (req, res) => {
-
-    console.log(req.body);
-
     const query = {
         searchTerm: req.body.searchTerm
     }
