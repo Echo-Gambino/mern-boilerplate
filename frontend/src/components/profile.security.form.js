@@ -39,7 +39,7 @@ class ProfileSecurity extends Component {
         </div>
         );
     }
-
+  
     renderChangePassword() {
         return (
         <div>
