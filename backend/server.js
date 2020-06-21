@@ -10,6 +10,7 @@ const passportJwt = require("./config/passport");
 
 const test = require('./routes/api/test.api');
 const users = require('./routes/api/users.api');
+const search = require('./routes/api/search.api');
 
 const {
     URI_DATABASE
@@ -50,6 +51,7 @@ passportJwt(passport);
 // Set up routes for testing purposes
 app.use('/test', test);
 app.use('/users', users);
+app.use('/search', search);
 
 app.listen(PORT, function() {
     console.log(`Server is running on Port: ${PORT}`);
