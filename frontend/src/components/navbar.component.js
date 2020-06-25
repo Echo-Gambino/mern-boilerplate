@@ -80,7 +80,10 @@ class Navbar extends Component {
             <Dropdown.Divider />
             <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Settings</Link>
             <button className="dropdown-item" 
-                    onClick={() => {this.props.logoutUser()}}
+                    onClick={() => {
+                        this.props.logoutUser();
+                        this.props.history.push(MAIN_PAGE_ENDPOINT);
+                    }}
             >
                 Log Out
             </button>
