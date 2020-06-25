@@ -20,7 +20,7 @@ class Profile extends Component {
         this.renderHighlightSection = this.renderHighlightSection.bind(this);
         this.renderPostsSection = this.renderPostsSection.bind(this);
 
-        this.testCallBack = this.testCallBack.bind(this);
+        this.setUserInfo = this.setUserInfo.bind(this);
 
         this.state = {
             name: "",
@@ -30,20 +30,27 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-        const auth = this.props.auth;
-        this.props.getUser(auth.user.id, this.testCallBack);
+        const id = this.props.match.params.id;
+        this.props.getUser(id, this.setUserInfo);
     }
 
-    testCallBack(args) {
+    componentWillReceiveProps(nextProps) {
+        const id = nextProps.match.params.id;
+        this.props.getUser(id, this.setUserInfo);
+    }
+
+    setUserInfo(args) {
         this.setState({
             name: (args.data.name) ? args.data.name : "Unknown",
             email: (args.data.email) ? args.data.email : "unknown@email.com",
-            bio: (args.data.bio) ? args.data.bio : "Placeholder"
+            bio: (args.data.bio.trim()) ? args.data.bio : "Biography not available."
         });
     }
 
     renderProfileCard() {
         const auth = this.props.auth;
+
+        const id = this.props.match.params.id;
     
         const { name, email, bio } = this.state;
 
@@ -55,7 +62,21 @@ class Profile extends Component {
                 <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
                 <br/>
                 <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
-                <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="btn btn-primary btn-block">Settings</Link>
+                { (auth.isAuthenticated) ? 
+                    <Link 
+                        to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
+                        className="btn btn-primary btn-block"
+                    >
+                        Settings
+                    </Link>
+                    :
+                    <button
+                        className="btn btn-primary btn-block"
+                    >
+                        Follow
+                    </button>
+                }
+                
             </div>
         </div>
         );

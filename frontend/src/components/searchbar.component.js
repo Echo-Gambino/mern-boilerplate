@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Collapse } from "react-bootstrap";
 
 import { performSearch } from "../actions/search.action";
+
+import {
+    PROFILE_PAGE_ENDPOINT
+} from "../constants";
 
 class SearchBar extends Component {
 
@@ -16,6 +21,8 @@ class SearchBar extends Component {
 
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
+
+        this.onSuggestionClick = this.onSuggestionClick.bind(this);
 
         this.search = this.search.bind(this);
 
@@ -66,12 +73,16 @@ class SearchBar extends Component {
         this.search();
     }
 
+    onSuggestionClick() {
+        this.setState({ searchTerm: "" });
+    }
+
     search() {
         const query = {
             searchTerm: this.state.searchTerm,
         };
 
-        if (JSON.stringify(query) == JSON.stringify(this.props.search.query)) {
+        if (JSON.stringify(query) === JSON.stringify(this.props.search.query)) {
             return;
         }
 
@@ -85,10 +96,18 @@ class SearchBar extends Component {
 
     renderSuggestion(obj, i) {
         return (
-        <div className="list-group-item" style={{ textAlign: "left" }}>
-            <h5>{obj.name}</h5>
-            <span style={{textOverflow: "ellipsis"}}>{obj.bio}</span>
-        </div>
+        <Link 
+            to={ PROFILE_PAGE_ENDPOINT + obj._id }
+            onClick={ this.onSuggestionClick }
+            className="list-group-item btn btn-outline-light text-body" 
+            style={{ textAlign: "left" }}
+        >
+            <h5><b>{obj.name}</b></h5>
+            { (obj.bio.trim()) ?
+                <span style={{textOverflow: "ellipsis"}}>{obj.bio}</span> :
+                <span><i>biography not available</i></span>
+            }
+        </Link>
         );
     }
 
@@ -116,7 +135,7 @@ class SearchBar extends Component {
                 }}
         >
             <div 
-                className="col-sm-4 list-group" 
+                className="col-sm-4 list-group btn-group-vertical" 
                 style={{ padding: "0.5em" }}
             >
                 { this.renderSuggestionList() }
