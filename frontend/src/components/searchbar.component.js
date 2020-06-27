@@ -73,7 +73,7 @@ class SearchBar extends Component {
         this.search();
     }
 
-    onSuggestionClick() {
+    onSuggestionClick(e) {
         this.setState({ searchTerm: "" });
     }
 
@@ -88,7 +88,7 @@ class SearchBar extends Component {
 
         this.props.performSearch(
             query,
-            ((args) => {console.log("search successful");})
+            ((args) => {})
         );
 
         this.timerSearch = null;
@@ -99,23 +99,36 @@ class SearchBar extends Component {
         <Link 
             to={ PROFILE_PAGE_ENDPOINT + obj._id }
             onClick={ this.onSuggestionClick }
-            className="list-group-item btn btn-outline-light text-body" 
-            style={{ textAlign: "left" }}
+            className="list-group-item text-body btn btn-outline-light" 
+            style={{ 
+                textAlign: "left", 
+                width: "100%",
+                whiteSpace: "nowrap",
+                paddingTop: "0.5em",
+                paddingBottom: "0.5em",
+            }}
         >
-            <h5><b>{obj.name}</b></h5>
-            { (obj.bio.trim()) ?
-                <span style={{textOverflow: "ellipsis"}}>{obj.bio}</span> :
-                <span><i>biography not available</i></span>
-            }
+            <h5 style={{ overflow: "hidden", textOverflow: "ellipsis", marginBottom: "0em" }}>
+                <b>{obj.name}</b>
+            </h5>
+
+            <div style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                { (obj.bio.trim()) ?
+                    <span>{obj.bio}</span> : 
+                    <span><i>biography not available</i></span>
+                }
+            </div>
         </Link>
         );
     }
 
     renderSuggestionList() {
+        const suggestionList = [...this.state.searchResults].splice(0, 10);
+
         return (
         <>
         {
-            this.state.searchResults.map((object, i) =>
+            suggestionList.map((object, i) =>
                 this.renderSuggestion(object, i)
             )
         }
@@ -127,19 +140,18 @@ class SearchBar extends Component {
         const enabled = (this.state.searchTerm !== "") && (this.state.searchResults.length !== 0) && this.state.focused;
 
         return (
-        <Collapse in={enabled}
+        <Collapse in={enabled}>
+            <span 
+                className="col-sm-4 list-group btn-group-vertical shadow"
                 style={{
-                    marginTop: "0.5em", 
-                    position: "absolute", 
-                    zIndex: "1" 
+                    padding: "0em",
+                    marginTop: "0.5em",
+                    position: "absolute",
+                    zIndex: "99",
                 }}
-        >
-            <div 
-                className="col-sm-4 list-group btn-group-vertical" 
-                style={{ padding: "0.5em" }}
             >
                 { this.renderSuggestionList() }
-            </div>
+            </span>
         </Collapse>
         );
     }
