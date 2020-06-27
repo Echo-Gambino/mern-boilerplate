@@ -9,6 +9,8 @@ import icongray from "../icon_gray.png";
 import { logoutUser } from "../actions/auth.action";
 import { connect } from 'react-redux';
 
+import SearchBar from "./searchbar.component";
+
 import {
     MAIN_PAGE_ENDPOINT,
     LOGIN_PAGE_ENDPOINT,
@@ -78,7 +80,10 @@ class Navbar extends Component {
             <Dropdown.Divider />
             <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Settings</Link>
             <button className="dropdown-item" 
-                    onClick={() => {this.props.logoutUser()}}
+                    onClick={() => {
+                        this.props.logoutUser();
+                        this.props.history.push(MAIN_PAGE_ENDPOINT);
+                    }}
             >
                 Log Out
             </button>
@@ -120,14 +125,6 @@ class Navbar extends Component {
         );
     }
 
-    renderSearchBar() {
-        return (
-        <div className="input-group">
-            <input type="text" className="form-control" placeholder="Search" />
-        </div>
-        );
-    }
-
     renderLoginRegisterButtons() {
         return (
         <>
@@ -150,7 +147,9 @@ class Navbar extends Component {
     renderNavLeft() {
         return (
         <Nav className="mr-auto">
-            <Nav.Item>{ this.renderSearchBar() }</Nav.Item>
+            <Nav.Item>
+                <SearchBar />
+            </Nav.Item>
         </Nav>
         );
     }

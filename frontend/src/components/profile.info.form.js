@@ -63,7 +63,19 @@ class ProfileInfo extends Component {
     }
 
     onSuccess(args) {
-        this.setState({ form: { ...this.state.form, success: true }, errors: {} });
+        const updatedUserInfo = JSON.parse(args.config.data);
+
+        this.setState({ 
+            form: { 
+                ...this.state.form, 
+                success: true, 
+            }, 
+            user: {
+                name: updatedUserInfo.name,
+                bio: updatedUserInfo.bio,
+            }, 
+            errors: {} 
+        });
 
         if (this.timerId !== null) {
             clearTimeout(this.timerId);
@@ -117,8 +129,8 @@ class ProfileInfo extends Component {
         e.preventDefault();
 
         this.setState({
-            name: this.state.user.name,
-            bio: this.state.user.bio
+            name: (this.state.user.name) ? this.state.user.name : this.state.name,
+            bio: (this.state.user.bio) ? this.state.user.bio : this.state.bio,
         });
     }
 
@@ -151,7 +163,7 @@ class ProfileInfo extends Component {
                     id="name"
                     type="text"
                 />
-                <p className="text-danger">{errors.bio}</p>
+                <p className="text-danger">{errors.name}</p>
             </div>
 
             <div className="form-group">

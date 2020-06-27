@@ -39,16 +39,8 @@ router.get("/", (req, res) => {
 
 // @route GET <api>/:id
 // @desc Get the profile of the user
-// @access PRIVATE (Temporarily PUBLIC)
+// @access PUBLIC
 router.get("/:id", (req, res) => {
-    const jwtToken = validateAuthToken(req.headers.authorization);
-    const tokenId = jwtToken && jwtToken.id;
-
-    if (tokenId !== req.params.id) {
-        res.status(400).send("Unauthorized request");
-        return;
-    }
-
     User.findById(req.params.id, function(err, user) {
         if (!user) {
             // HTTP status 404 means "NOT FOUND" error
