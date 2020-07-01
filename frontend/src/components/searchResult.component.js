@@ -30,8 +30,31 @@ class SearchResult extends Component {
     componentWillReceiveProps(newProps) {
         if (!newProps) { return; }
 
-        if (JSON.stringify(newProps.search.result) !== JSON.stringify(this.state.searchResults)) {
-            this.setState({ searchResults: newProps.search.result });
+        const searchTerm = this.props.match.params.searchTerm;
+
+        const query = {
+            searchTerm: searchTerm
+        };
+
+        if (JSON.stringify(query) === JSON.stringify(newProps.search.query)) {
+            if (JSON.stringify(newProps.search.result) !== JSON.stringify(this.state.searchResults)) {
+                this.setState({ searchResults: newProps.search.result });
+            }
+        } else {
+            try {
+                this.props.performSearch(
+                    query,
+                    ((args) => {
+                        let {sQuery, sResult} = args;
+                        if (JSON.stringify(query) === JSON.stringify(sQuery)) {
+                            this.setState({ searchResults: sQuery });
+                        }
+                    }),
+                    false
+                );
+            } catch (e) {
+                console.log('Error occurred on search');
+            }
         }
     }
 

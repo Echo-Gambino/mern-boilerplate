@@ -9,16 +9,21 @@ import {
     API_SEARCH_ENDPOINT
 } from "../constants";
 
-export const performSearch = (query, callback) => dispatch => {
+export const performSearch = (query, callback, allowDispatch = true) => dispatch => {
     axios.post(API_SEARCH_ENDPOINT, query)
         .then(res => {
-            dispatch({
-                type: SET_SEARCH_RESULTS,
+            if (allowDispatch) {
+                dispatch({
+                    type: SET_SEARCH_RESULTS,
+                    query: query,
+                    result: res.data
+                });
+            }
+
+            callback({
                 query: query,
                 result: res.data
             });
-
-            callback(res);
         })
         .catch(err => {
             dispatch({
