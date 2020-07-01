@@ -47,7 +47,7 @@ router.get("/:id", (req, res) => {
     User.findById(req.params.id, function(err, user) {
         if (!user) {
             // HTTP status 404 means "NOT FOUND" error
-            res.status(404).send("Data is not found");
+            res.status(404).json("Data is not found");
             if (err) {
                 console.log(err);
             }

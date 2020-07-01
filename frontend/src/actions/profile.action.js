@@ -20,6 +20,7 @@ export const getUser = (id, callback) => dispatch => {
             callback(res);
         })
         .catch(err => {
+            callback(null);
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data

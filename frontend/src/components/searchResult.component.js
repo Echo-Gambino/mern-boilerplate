@@ -121,7 +121,9 @@ const mapStateToProps = state => ({
     search: state.search
 });
 
+const routerSearchResult = withRouter(SearchResult);
+
 export default connect(
     mapStateToProps,
     { performSearch }
-)(SearchResult);
+)(routerSearchResult);
