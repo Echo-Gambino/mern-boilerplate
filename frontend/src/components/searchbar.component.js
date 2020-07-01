@@ -86,10 +86,14 @@ class SearchBar extends Component {
             return;
         }
 
-        this.props.performSearch(
-            query,
-            ((args) => {})
-        );
+        try {
+            this.props.performSearch(
+                query,
+                ((args) => {})
+            );
+        } catch (e) {
+            console.log('Error occurred on search');
+        }
 
         this.timerSearch = null;
     }

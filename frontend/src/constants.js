@@ -4,6 +4,7 @@ export const REGISTER_PAGE_ENDPOINT = `/register`;
 export const LOGIN_PAGE_ENDPOINT = `/login`;
 export const PROFILE_PAGE_ENDPOINT = `/user/`;
 export const PROFILESETTINGS_PAGE_ENDPOINT = `/user/settings/`;
+export const SEARCH_PAGE_ENDPOINT = `/search/`;
 
 export const API_GETUSER_ENDPOINT = `/users/`;
 export const API_LOGIN_ENDPOINT = `/users/login`;
