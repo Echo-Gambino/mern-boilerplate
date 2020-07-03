@@ -5,6 +5,7 @@ export const LOGIN_PAGE_ENDPOINT = `/login`;
 export const PROFILE_PAGE_ENDPOINT = `/user/`;
 export const PROFILESETTINGS_PAGE_ENDPOINT = `/user/settings/`;
 export const PROFILEFOLLOWING_PAGE_ENDPOINT = `/user/following/`;
+export const PROFILEFOLLOWERS_PAGE_ENDPOINT = `/user/followers/`;
 export const SEARCH_PAGE_ENDPOINT = `/search/`;
 
 export const API_GETUSER_ENDPOINT = `/users/`;

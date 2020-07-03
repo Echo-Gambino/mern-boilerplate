@@ -75,7 +75,7 @@ export const getFollowerInfo = (userId, callback) => dispatch => {
     axios.get(API_USERFOLLOWERS_GET_ENDPOINT + userId)
         .then(res => {
             try {
-                callback(res.body);
+                callback(res.data);
             } catch (e) {
                 callback(null);
             }

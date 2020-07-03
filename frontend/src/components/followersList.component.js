@@ -3,22 +3,16 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getFollowingInfo } from '../actions/follow.action';
+import { getFollowerInfo } from '../actions/follow.action';
 import { getUser } from '../actions/profile.action';
 
-import Result from './result.card';
 import ResultList from './resultList.component';
 
-import {
-    PROFILE_PAGE_ENDPOINT,
-} from "../constants";
-
-class FollowedUsers extends Component {
+class FollowersList extends Component {
 
     constructor(props) {
         super(props);
 
-        this.search = this.search.bind(this);
         this.onGetIdList = this.onGetIdList.bind(this);
 
         this.renderUsersList = this.renderUsersList.bind(this);
@@ -28,26 +22,21 @@ class FollowedUsers extends Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const userId = this.props.match.params.id;
-        this.search(userId);
-    }
-
-    search(userId) {
-        this.props.getFollowingInfo(userId, this.onGetIdList);
+        this.props.getFollowerInfo(userId, this.onGetIdList);
     }
 
     onGetIdList(data) {
-        let users = (data && data.users) ? data.users : [];
-        
-        let pUserObjects = [];
+        let users = (Array.isArray(data && data.users)) ? data.users : [];
 
+        let pUserObjects = [];
         if (users.length !== 0) {
             for (let i = 0; i < users.length; i++) {
                 let id = users[i];
                 let p = new Promise((resolve) => {
-                    this.props.getUser(id, (u) => {
-                        resolve(u);
+                    this.props.getUser(id, (res) => { 
+                        resolve(res && res.data);
                     });
                 });
                 pUserObjects.push(p);
@@ -56,10 +45,8 @@ class FollowedUsers extends Component {
 
         Promise.all(pUserObjects)
             .then(results => {
-                let userObjects = results.filter(function (el) {
-                    return el != null;
-                })
-                
+                let userObjects = results.filter(function (item) { return item != null; });
+                userObjects = (Array.isArray(userObjects)) ? userObjects : [];
                 this.setState({ users: userObjects });
             })
             .catch(error => {
@@ -69,50 +56,47 @@ class FollowedUsers extends Component {
 
     renderUsersList(users) {
         users = (Array.isArray(users)) ? users : [];
+        const count = users.length;
+
+        if (count <= 0) {
+            return (<i>Hm, seems empty here. Users who follow you will show up here.</i>);
+        }
+
         return (<ResultList results={users} />);
     }
 
     render() {
-        const searchTerm = this.props.match.params.searchTerm;
-        const searchResults = this.state.searchResults;
-
         const users = (Array.isArray(this.state.users)) ? this.state.users : [];
-        const count = users.length;
-
-        console.log(users);
 
         return (
         <div>
-            <h1 style={{textAlign: "left"}}>Followed Users.</h1>
-
+            <h1 style={{textAlign: "left"}}>People who follow you:</h1>
+            
             <hr />
 
             <div className="container">
-                { 
-                    (count > 0) ? 
-                        this.renderUsersList(users)
-                        : 
-                        (<i>Hm, seems empty here. Follow other users to have them show up here!</i>) 
-                }
+                { this.renderUsersList(users) }
             </div>
         </div>
         );
+
     }
 
 }
 
-FollowedUsers.propTypes = {
-    getFollowingInfo: PropTypes.func.isRequired
+FollowersList.propTypes = {
+    getFollowerInfo: PropTypes.func.isRequired,
+    getUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({});
 
-const routerFollowedUsers = withRouter(FollowedUsers);
+const routerFollowersList = withRouter(FollowersList);
 
 export default connect(
     mapStateToProps,
-    { 
-        getFollowingInfo,
-        getUser 
+    {
+        getFollowerInfo,
+        getUser
     }
-)(routerFollowedUsers);
+)(routerFollowersList);
