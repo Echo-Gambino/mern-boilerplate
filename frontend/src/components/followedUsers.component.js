@@ -7,6 +7,7 @@ import { getFollowingInfo } from '../actions/follow.action';
 import { getUser } from '../actions/profile.action';
 
 import Result from './result.card';
+import ResultList from './resultList.component';
 
 import {
     PROFILE_PAGE_ENDPOINT,
@@ -21,7 +22,6 @@ class FollowedUsers extends Component {
         this.onGetIdList = this.onGetIdList.bind(this);
 
         this.renderUsersList = this.renderUsersList.bind(this);
-        this.renderUserItem = this.renderUserItem.bind(this);
 
         this.state = {
             users: []
@@ -67,29 +67,9 @@ class FollowedUsers extends Component {
             });
     }
 
-    renderUserItem(userId) {
-        if (!userId) {
-            return (<></>);
-        }
-
-
-
-    }
-
     renderUsersList(users) {
-        users = (users) ? users : [];
-
-        return (
-        <>{
-            users.map((usr, i) => 
-            <Result
-                to={PROFILE_PAGE_ENDPOINT + usr._id}
-                icon={usr.icon}
-                title={usr.name}
-                body={usr.bio}
-            />)
-        }</>
-        );
+        users = (Array.isArray(users)) ? users : [];
+        return (<ResultList results={users} />);
     }
 
     render() {

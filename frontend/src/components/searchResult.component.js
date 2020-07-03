@@ -1,15 +1,11 @@
-import React, { Component, Profiler } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { performSearch } from '../actions/search.action';
 
-import Result from './result.card';
-
-import {
-    PROFILE_PAGE_ENDPOINT
-} from "../constants";
+import ResultList from './resultList.component';
 
 class SearchResult extends Component {
 
@@ -94,16 +90,7 @@ class SearchResult extends Component {
             <hr />
 
             <div className="container">
-                {searchResults.map((object, i) => { 
-                    return (
-                        <Result 
-                            to={PROFILE_PAGE_ENDPOINT + object._id} 
-                            icon={object.icon} 
-                            title={object.name} 
-                            body={object.bio} 
-                        />
-                    ); 
-                })}
+                <ResultList results={searchResults} />
             </div>
 
         </div>
