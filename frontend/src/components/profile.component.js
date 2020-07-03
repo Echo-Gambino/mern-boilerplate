@@ -27,7 +27,9 @@ class Profile extends Component {
         this.state = {
             name: "",
             email: "",
-            bio: ""
+            bio: "",
+            following: 0,
+            followers: 0,
         };
     }
 
@@ -41,11 +43,20 @@ class Profile extends Component {
         this.props.getUser(id, this.setUserInfo);
     }
 
+    componentDidUpdate() {
+        // const id = this.props.match.params.id;
+        // this.props.getUser(id, this.setUserInfo);
+    }
+
     setUserInfo(args) {
+        const data = args.data;
+
         this.setState({
-            name: (args.data.name) ? args.data.name : "Unknown",
-            email: (args.data.email) ? args.data.email : "unknown@email.com",
-            bio: (args.data.bio.trim()) ? args.data.bio : "Biography not available."
+            name:  (data.name) ? data.name : "Unknown",
+            email:  (data.email) ? data.email : "unknown@email.com",
+            bio:  (data.bio.trim()) ? data.bio : "Biography not available.",
+            following: (Array.isArray(data.following)) ? data.following.length : 0,
+            followers: (Array.isArray(data.followers)) ? data.followers.length : 0,
         });
     }
 
@@ -54,17 +65,23 @@ class Profile extends Component {
 
         const id = this.props.match.params.id;
 
-        console.log(auth)
-    
-        const { name, email, bio } = this.state;
+        const { name, email, bio, followers, following } = this.state;
 
         return (
         <div className="card">
             <img className="card-img-top" src={icon} alt="Card image cap" />
             <div className="card-body">
-                <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
-                <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
-                <br/>
+                <div style={{marginBottom: '0.5em'}}>
+                    <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
+                    <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
+                </div>
+                
+                <div className="d-flex justify-content-center" style={{marginBottom: '0.5em'}}>
+                    <div style={{ marginRight: '0.5em' }}><b>{followers}</b> Followers</div>
+                    <div style={{ marginRight: '0.5em' }}><b>{following}</b> Following</div>
+                </div>
+
+                <hr style={{marginTop: '0.5em', marginBottom: '0.5em'}} />
                 <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
                 { ((auth && auth.user && auth.user.id) === id) ? 
                     <Link 
@@ -74,8 +91,12 @@ class Profile extends Component {
                         Settings
                     </Link>
                     :
-                    <FollowButton followeeId={id} />
-                    
+                    <FollowButton 
+                        onClick={(() => {
+                            this.props.getUser(id, this.setUserInfo);
+                        })}
+                        followeeId={id} 
+                    />
                 }
                 
             </div>

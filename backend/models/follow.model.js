@@ -41,12 +41,12 @@ FollowSchema.pre(/delete/i, { document: true, query: false }, function (next) {
                 user.followers = followers.filter(id => `${id}` != followId);
 
                 // Save the changes made
-                user.save();
+                user.save().catch(error => console.log(`Follow Pre delete error [user.save]:\n${error}`));
                 resolve(user);
             })
             .catch(error => {
                 error = (error) ? error : {};
-                console.log(`Pre delete error [Follow]: ${error}`);
+                console.log(`Follow Pre delete error [user.findById]:\n${error}`);
                 reject(error);
             });
         });

@@ -21,9 +21,6 @@ export const followUser = (followerId, followeeId, callback) => dispatch => {
 
     callback = (typeof(callback) === 'function') ? callback : (() => false);
 
-    console.log(data);
-    console.log(callback);
-
     axios.post(API_FOLLOWUSER_POST_ENDPOINT, data)
         .then(res => {
             try {

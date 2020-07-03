@@ -317,9 +317,10 @@ router.post("/follow", (req, res) => {
 
                     Follow.find(followData, function (err, results) {
                         if (results.length !== 0) {
-                            res.status(400).json('Cannot follow the same user more than once.');
+                            let follow = results[0];
+                            res.status(200).json(follow);
                         } else if (err) {
-                            res.status(err.status).json(err);
+                            res.status((err.status) ? err.status : 500).json(err);
                         } else {
                             const newFollow = new Follow(followData);
 
@@ -331,8 +332,8 @@ router.post("/follow", (req, res) => {
                                     followee.followers.push(follow._id);
 
                                     // Save the follower and followee user objects.
-                                    follower.save();
-                                    followee.save();
+                                    follower.save().catch(error => console.log(`Users follower save error: ${error}`));
+                                    followee.save().catch(error => console.log(`Users followee save error: ${error}`));
 
                                     res.status(200).json(follow);
                                 })
@@ -437,11 +438,41 @@ router.get("/follow/following/:id", (req, res) => {
         if (err) {
             res.status(400).json('Failed to perform action.');
         } else if (user) {
-            const output = {
-                count: user.following.length,
-                users: (authenticated) ? user.following : null
-            };
-            res.status(200).json(output);
+
+            let pFollowingObj = [];
+            for (let i = 0; i < user.following.length; i++) {
+                let followId = user.following[i];
+                let p = new Promise(function (resolve) {
+                    Follow.findById(followId)
+                        .then(follow => {
+                            let userId = (follow && follow.followee_id) ? follow.followee_id : null;
+                            resolve(userId);
+                        })
+                        .catch(error => {
+                            resolve(null);
+                        });
+                });
+                pFollowingObj.push(p);
+            }
+
+            Promise.all(pFollowingObj)
+                .then(userIds => {
+                    userIds = userIds.filter(i => i);
+                    let output = {
+                        count: userIds.length,
+                        users: (authenticated) ? userIds : null,
+                    };
+                    res.status(200).json(output);
+                })
+                .catch(error => {
+                    console.log(`Get following error: ${error}`);
+                    let output = {
+                        count: 0,
+                        users: null,
+                    };
+                    res.status(500).json(output);
+                });
+
         } else {
             res.status(404).json('User cannot be found.');
         }
@@ -464,11 +495,41 @@ router.get("/follow/followers/:id", (req, res) => {
         if (err) {
             res.status(400).json('Failed to perform action.');
         } else if (user) {
-            const output = {
-                count: user.followers.length,
-                users: (authenticated) ? user.followers : null
-            };
-            res.status(200).json(output);
+
+            let pFollowersObj = [];
+            for (let i = 0; i < user.followers.length; i++) {
+                let followId = user.followers[i];
+                let p = new Promise(function (resolve) {
+                    Follow.findById(followId)
+                        .then(follow => {
+                            let userId = (follow && follow.follower_id) ? follow.follower_id : null;
+                            resolve(userId);
+                        })
+                        .catch(error => {
+                            resolve(null);
+                        });
+                });
+                pFollowersObj.push(p);
+            }
+
+            Promise.all(pFollowersObj)
+                .then(userIds => {
+                    userIds = userIds.filter(i => i);
+                    let output = {
+                        count: userIds.length,
+                        users: (authenticated) ? userIds : null,
+                    };
+                    res.status(200).json(output);
+                })
+                .catch(error => {
+                    console.log(`Get following error: ${error}`);
+                    let output = {
+                        count: 0,
+                        users: null,
+                    };
+                    res.status(500).json(output);
+                });
+
         } else {
             res.status(404).json('User cannot be found.');
         }

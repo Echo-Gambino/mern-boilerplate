@@ -14,8 +14,12 @@ class FollowButton extends Component {
     constructor(props) {
         super(props);
 
+        this.onClick = this.props.onClick ?? (() => false);
+
         this.onFollowUser = this.onFollowUser.bind(this);
         this.onUnfollowUser = this.onUnfollowUser.bind(this);
+
+        this.updateButtonState = this.updateButtonState.bind(this);
 
         this.state = {
             followeeId: (this.props.followeeId) ? this.props.followeeId : '',
@@ -24,6 +28,10 @@ class FollowButton extends Component {
     }
 
     componentDidMount() {
+        this.updateButtonState();
+    }
+
+    updateButtonState() {
         const auth = this.props.auth;
         const userId = auth && auth.user && auth.user.id;
 
@@ -47,6 +55,8 @@ class FollowButton extends Component {
                     state: false
                 });
             }
+
+            this.onClick();
         }));
     }
 
@@ -60,17 +70,19 @@ class FollowButton extends Component {
                     state: true
                 });
             }
+
+            this.onClick();
         }));
     }
 
     render() {
         const btnClassName = (this.state.state) ? 'btn-primary' : 'btn-secondary';
-        const onClick = (this.state.state) ? this.onFollowUser : this.onUnfollowUser;
+        const onButtonClick = (this.state.state) ? this.onFollowUser : this.onUnfollowUser
         const text = (this.state.state) ? 'Follow' : 'Unfollow';
 
         return (
         <button
-            onClick={onClick}
+            onClick={onButtonClick}
             className={"btn btn-block " + btnClassName}
         >
             {text}
