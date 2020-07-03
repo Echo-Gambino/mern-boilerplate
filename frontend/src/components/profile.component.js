@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 
 import { getUser } from "../actions/profile.action";
 
+import FollowButton from "./follow.button";
+
 import icon from "../icon.png";
 
 import {
@@ -51,6 +53,8 @@ class Profile extends Component {
         const auth = this.props.auth;
 
         const id = this.props.match.params.id;
+
+        console.log(auth)
     
         const { name, email, bio } = this.state;
 
@@ -62,7 +66,7 @@ class Profile extends Component {
                 <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
                 <br/>
                 <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
-                { (auth.isAuthenticated) ? 
+                { ((auth && auth.user && auth.user.id) === id) ? 
                     <Link 
                         to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
                         className="btn btn-primary btn-block"
@@ -70,11 +74,8 @@ class Profile extends Component {
                         Settings
                     </Link>
                     :
-                    <button
-                        className="btn btn-primary btn-block"
-                    >
-                        Follow
-                    </button>
+                    <FollowButton followeeId={id} />
+                    
                 }
                 
             </div>

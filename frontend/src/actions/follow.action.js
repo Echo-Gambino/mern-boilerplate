@@ -21,6 +21,9 @@ export const followUser = (followerId, followeeId, callback) => dispatch => {
 
     callback = (typeof(callback) === 'function') ? callback : (() => false);
 
+    console.log(data);
+    console.log(callback);
+
     axios.post(API_FOLLOWUSER_POST_ENDPOINT, data)
         .then(res => {
             try {
@@ -30,6 +33,7 @@ export const followUser = (followerId, followeeId, callback) => dispatch => {
             }
         })
         .catch(err => {
+            callback(null);
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
@@ -56,6 +60,7 @@ export const unfollowUser = (followerId, followeeId, callback) => dispatch => {
             }
         })
         .catch(err => {
+            callback(null);
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
@@ -93,7 +98,7 @@ export const getFollowingInfo = (userId, callback) => dispatch => {
     userId = (typeof(userId) === 'string') ? userId : "";
 
     callback = (typeof(callback) === 'function') ? callback : (() => false);
-    
+
     axios.get(API_USERFOLLOWING_GET_ENDPOINT + userId)
         .then(res => {
             try {

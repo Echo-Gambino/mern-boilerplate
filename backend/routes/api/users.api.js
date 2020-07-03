@@ -263,9 +263,11 @@ router.post("/remove/:id", (req, res) => {
         return;
     }
 
-    User.findByIdAndRemove(req.params.id, function(err, user) {
+    User.findById(req.params.id, function (err, user) {
         if (user) {
             // If user is NOT null, that means that the user object is removed.
+            user.deleteOne();
+
             res.status(200).send('Removal successful');
         } else if (err) {
             // If err is NOT null, that means that something has gone wrong, so report it.
@@ -391,15 +393,31 @@ router.post("/unfollow", (req, res) => {
     // Usually its only one, however, this is just to catch the edge case 
     // that the system accidentally allowed more than one follow object
     // that has the same follower and followee id.
+    Follow.find(followData, function (err, result) {
+        if (result) {
+            // Return the result.
+            for (let i = 0; i < result.length; i++) {
+                let followObj = result[i];
+                followObj.deleteOne();
+            }
+            res.status(200).json(result);
+        } else {
+            // If there is an error, return the error.
+            res.status((err.status) ? err.status : 500).json(err);
+        }
+    });
+
+    /*
     Follow.deleteMany(followData, function (err, result) {
         if (err) {
             // If there is an error, return the error.
-            res.status(err.status).json(err);
+            res.status((err.status) ? err.status : 500).json(err);
         } else if (result) {
             // Else, return the result.
             res.status(200).json(result);
         }
     });
+    */
 
 });
 
