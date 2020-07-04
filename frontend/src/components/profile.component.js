@@ -11,6 +11,8 @@ import icon from "../icon.png";
 
 import {
     PROFILESETTINGS_PAGE_ENDPOINT,
+    PROFILEFOLLOWING_PAGE_ENDPOINT,
+    PROFILEFOLLOWERS_PAGE_ENDPOINT,
 } from "../constants";
 
 class Profile extends Component {
@@ -18,6 +20,8 @@ class Profile extends Component {
     constructor(props) {
         super(props);
 
+        this.renderProfileButtonsLoggedIn = this.renderProfileButtonsLoggedIn.bind(this);
+        this.renderProfileButtonsLoggedOut = this.renderProfileButtonsLoggedOut.bind(this);
         this.renderProfileCard = this.renderProfileCard.bind(this);
         this.renderHighlightSection = this.renderHighlightSection.bind(this);
         this.renderPostsSection = this.renderPostsSection.bind(this);
@@ -43,11 +47,6 @@ class Profile extends Component {
         this.props.getUser(id, this.setUserInfo);
     }
 
-    componentDidUpdate() {
-        // const id = this.props.match.params.id;
-        // this.props.getUser(id, this.setUserInfo);
-    }
-
     setUserInfo(args) {
         const data = args.data;
 
@@ -60,10 +59,50 @@ class Profile extends Component {
         });
     }
 
+    renderProfileButtonsLoggedIn(id) {
+        return (
+        <>
+            <div className="list-group" style={{ marginBottom: '0.5em' }}>
+                <Link to={PROFILEFOLLOWING_PAGE_ENDPOINT + id} 
+                    className="list-group-item list-group-item-action"
+                >
+                    Following List
+                </Link>
+                <Link to={PROFILEFOLLOWERS_PAGE_ENDPOINT + id} 
+                    className="list-group-item list-group-item-action"
+                >
+                    Followers List
+                </Link>
+            </div>
+
+            <Link 
+                to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
+                className="btn btn-primary btn-block"
+            >
+                Settings
+            </Link>
+        </>
+        );
+    }
+
+    renderProfileButtonsLoggedOut(id) {
+        return (
+        <>
+            <FollowButton 
+                onClick={(() => {
+                    this.props.getUser(id, this.setUserInfo); 
+                })}
+                followeeId={id} 
+            />
+        </>
+        );
+    }
+
     renderProfileCard() {
         const auth = this.props.auth;
-
         const id = this.props.match.params.id;
+
+        const authorized = ((auth && auth.user && auth.user.id) === id);
 
         const { name, email, bio, followers, following } = this.state;
 
@@ -83,20 +122,10 @@ class Profile extends Component {
 
                 <hr style={{marginTop: '0.5em', marginBottom: '0.5em'}} />
                 <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
-                { ((auth && auth.user && auth.user.id) === id) ? 
-                    <Link 
-                        to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
-                        className="btn btn-primary btn-block"
-                    >
-                        Settings
-                    </Link>
+                { (authorized) ? 
+                    this.renderProfileButtonsLoggedIn(id)
                     :
-                    <FollowButton 
-                        onClick={(() => {
-                            this.props.getUser(id, this.setUserInfo);
-                        })}
-                        followeeId={id} 
-                    />
+                    this.renderProfileButtonsLoggedOut(id)
                 }
                 
             </div>
