@@ -11,6 +11,7 @@ import {
     REGISTER_PAGE_ENDPOINT,
     LOGIN_PAGE_ENDPOINT,
     PROFILE_PAGE_ENDPOINT,
+    SEARCH_PAGE_ENDPOINT
 } from "../constants";
 
 class Main extends Component {
@@ -61,6 +62,16 @@ class Main extends Component {
 
         return (
         <div>
+            <Link
+                to={SEARCH_PAGE_ENDPOINT + "email"}
+                className="btn btn-primary"
+                style={{
+                    marginLeft: "0.5em",
+                    marginRight: "0.5em"
+                }}
+            >
+                Search Page
+            </Link>
             <Link
                 to={PROFILE_PAGE_ENDPOINT + auth.user.id}
                 className="btn btn-primary"

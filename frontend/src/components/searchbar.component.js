@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,8 @@ import { Collapse } from "react-bootstrap";
 import { performSearch } from "../actions/search.action";
 
 import {
-    PROFILE_PAGE_ENDPOINT
+    PROFILE_PAGE_ENDPOINT,
+    SEARCH_PAGE_ENDPOINT,
 } from "../constants";
 
 class SearchBar extends Component {
@@ -70,7 +71,10 @@ class SearchBar extends Component {
             clearTimeout(this.timerSearch);
         }
 
-        this.search();
+        // this.search();
+        if (this.state.searchTerm) {
+            this.props.history.push(SEARCH_PAGE_ENDPOINT + this.state.searchTerm);
+        }
     }
 
     onSuggestionClick(e) {
@@ -86,10 +90,14 @@ class SearchBar extends Component {
             return;
         }
 
-        this.props.performSearch(
-            query,
-            ((args) => {})
-        );
+        try {
+            this.props.performSearch(
+                query,
+                ((args) => {})
+            );
+        } catch (e) {
+            console.log('Error occurred on search');
+        }
 
         this.timerSearch = null;
     }
@@ -123,7 +131,8 @@ class SearchBar extends Component {
     }
 
     renderSuggestionList() {
-        const suggestionList = [...this.state.searchResults].splice(0, 10);
+        const searchResults = (Array.isArray(this.state.searchResults)) ? this.state.searchResults : [];
+        const suggestionList = [...searchResults].splice(0, 10);
 
         return (
         <>
@@ -187,7 +196,9 @@ const mapStateToProps = state => ({
     search: state.search
 });
 
+const routerSearchBar = withRouter(SearchBar);
+
 export default connect(
     mapStateToProps,
     { performSearch }
-)(SearchBar);
+)(routerSearchBar);

@@ -5,10 +5,14 @@ import { connect } from "react-redux";
 
 import { getUser } from "../actions/profile.action";
 
+import FollowButton from "./follow.button";
+
 import icon from "../icon.png";
 
 import {
     PROFILESETTINGS_PAGE_ENDPOINT,
+    PROFILEFOLLOWING_PAGE_ENDPOINT,
+    PROFILEFOLLOWERS_PAGE_ENDPOINT,
 } from "../constants";
 
 class Profile extends Component {
@@ -16,6 +20,8 @@ class Profile extends Component {
     constructor(props) {
         super(props);
 
+        this.renderProfileButtonsLoggedIn = this.renderProfileButtonsLoggedIn.bind(this);
+        this.renderProfileButtonsLoggedOut = this.renderProfileButtonsLoggedOut.bind(this);
         this.renderProfileCard = this.renderProfileCard.bind(this);
         this.renderHighlightSection = this.renderHighlightSection.bind(this);
         this.renderPostsSection = this.renderPostsSection.bind(this);
@@ -25,7 +31,9 @@ class Profile extends Component {
         this.state = {
             name: "",
             email: "",
-            bio: ""
+            bio: "",
+            following: 0,
+            followers: 0,
         };
     }
 
@@ -40,41 +48,84 @@ class Profile extends Component {
     }
 
     setUserInfo(args) {
+        const data = args.data;
+
         this.setState({
-            name: (args.data.name) ? args.data.name : "Unknown",
-            email: (args.data.email) ? args.data.email : "unknown@email.com",
-            bio: (args.data.bio.trim()) ? args.data.bio : "Biography not available."
+            name:  (data.name) ? data.name : "Unknown",
+            email:  (data.email) ? data.email : "unknown@email.com",
+            bio:  (data.bio.trim()) ? data.bio : "Biography not available.",
+            following: (Array.isArray(data.following)) ? data.following.length : 0,
+            followers: (Array.isArray(data.followers)) ? data.followers.length : 0,
         });
+    }
+
+    renderProfileButtonsLoggedIn(id) {
+        return (
+        <>
+            <div className="list-group" style={{ marginBottom: '0.5em' }}>
+                <Link to={PROFILEFOLLOWING_PAGE_ENDPOINT + id} 
+                    className="list-group-item list-group-item-action"
+                >
+                    Following List
+                </Link>
+                <Link to={PROFILEFOLLOWERS_PAGE_ENDPOINT + id} 
+                    className="list-group-item list-group-item-action"
+                >
+                    Followers List
+                </Link>
+            </div>
+
+            <Link 
+                to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
+                className="btn btn-primary btn-block"
+            >
+                Settings
+            </Link>
+        </>
+        );
+    }
+
+    renderProfileButtonsLoggedOut(id) {
+        return (
+        <>
+            <FollowButton 
+                onClick={(() => {
+                    this.props.getUser(id, this.setUserInfo); 
+                })}
+                followeeId={id} 
+            />
+        </>
+        );
     }
 
     renderProfileCard() {
         const auth = this.props.auth;
-
         const id = this.props.match.params.id;
-    
-        const { name, email, bio } = this.state;
+
+        const authorized = ((auth && auth.user && auth.user.id) === id);
+
+        const { name, email, bio, followers, following } = this.state;
 
         return (
         <div className="card">
             <img className="card-img-top" src={icon} alt="Card image cap" />
             <div className="card-body">
-                <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
-                <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
-                <br/>
+                <div style={{marginBottom: '0.5em'}}>
+                    <h3 className="card-title" style={{margin: "0"}}>{name}</h3>
+                    <h6 className="card-title" style={{margin: "0"}}>{email}</h6>
+                </div>
+                
+                <div className="d-flex justify-content-center" style={{marginBottom: '0.5em'}}>
+                    <div style={{ marginRight: '0.5em' }}><b>{followers}</b> Followers</div>
+                    <div style={{ marginRight: '0.5em' }}><b>{following}</b> Following</div>
+                </div>
+
+                <hr style={{marginTop: '0.5em', marginBottom: '0.5em'}} />
                 <p className="card-text" style={{textAlign: "left"}}>{bio}</p>
-                { (auth.isAuthenticated) ? 
-                    <Link 
-                        to={PROFILESETTINGS_PAGE_ENDPOINT + id} 
-                        className="btn btn-primary btn-block"
-                    >
-                        Settings
-                    </Link>
+                { (authorized) ? 
+                    this.renderProfileButtonsLoggedIn(id)
                     :
-                    <button
-                        className="btn btn-primary btn-block"
-                    >
-                        Follow
-                    </button>
+                    this.renderProfileButtonsLoggedOut(id)
                 }
                 
             </div>

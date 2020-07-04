@@ -16,7 +16,9 @@ import {
     LOGIN_PAGE_ENDPOINT,
     REGISTER_PAGE_ENDPOINT,
     PROFILE_PAGE_ENDPOINT,
-    PROFILESETTINGS_PAGE_ENDPOINT
+    PROFILESETTINGS_PAGE_ENDPOINT,
+    PROFILEFOLLOWING_PAGE_ENDPOINT,
+    PROFILEFOLLOWERS_PAGE_ENDPOINT,
 } from "../constants";
 
 const UserImageDropdown = React.forwardRef(({ children, onClick}, ref) => (
@@ -77,6 +79,8 @@ class Navbar extends Component {
             </div>
             <Dropdown.Divider />
             <Link to={PROFILE_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">My Profile</Link>
+            <Link to={PROFILEFOLLOWING_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Following List</Link>
+            <Link to={PROFILEFOLLOWERS_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Followers List</Link>
             <Dropdown.Divider />
             <Link to={PROFILESETTINGS_PAGE_ENDPOINT + auth.user.id} className="dropdown-item">Settings</Link>
             <button className="dropdown-item" 

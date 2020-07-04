@@ -17,6 +17,9 @@ import Register from "./components/register.component";
 import Login from "./components/login.component";
 import Profile from "./components/profile.component";
 import ProfileSettings from "./components/profile.settings.component";
+import SearchResult from "./components/searchResult.component";
+import FollowingList from "./components/followingList.component";
+import FollowersList from "./components/followersList.component";
 
 import {
   MAIN_PAGE_ENDPOINT,
@@ -24,6 +27,9 @@ import {
   LOGIN_PAGE_ENDPOINT,
   PROFILE_PAGE_ENDPOINT,
   PROFILESETTINGS_PAGE_ENDPOINT,
+  PROFILEFOLLOWING_PAGE_ENDPOINT,
+  PROFILEFOLLOWERS_PAGE_ENDPOINT,
+  SEARCH_PAGE_ENDPOINT,
 } from "./constants";
 
 // Check for token to keep user logged in
@@ -59,8 +65,11 @@ class App extends Component {
               <Route exact path={MAIN_PAGE_ENDPOINT} component={Main} />
               <Route exact path={REGISTER_PAGE_ENDPOINT} component={Register} />
               <Route exact path={LOGIN_PAGE_ENDPOINT} component={Login} />
+              <Route exact path={PROFILEFOLLOWING_PAGE_ENDPOINT + ':id'} component={FollowingList} />
+              <Route exact path={PROFILEFOLLOWERS_PAGE_ENDPOINT + ':id'} component={FollowersList} />
               <Route exact path={PROFILESETTINGS_PAGE_ENDPOINT + ':id'} component={ProfileSettings} />
               <Route exact path={PROFILE_PAGE_ENDPOINT + ':id'} component={Profile} />
+              <Route exact path={SEARCH_PAGE_ENDPOINT + ':searchTerm'} component={SearchResult} />
             </Switch>
           </div>
         </div>

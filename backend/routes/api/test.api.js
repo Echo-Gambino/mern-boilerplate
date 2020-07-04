@@ -3,12 +3,15 @@ const router = express.Router();
 
 const util = require('util');
 
+const Follow = require('../../models/follow.model');
+
 router.get('/', (req, res) => {
-
-    console.log(req);
-
-    res.json({
-        message: "Hello World"
+    Follow.find(function(err, follows) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(follows);
+        }
     });
 });
 
